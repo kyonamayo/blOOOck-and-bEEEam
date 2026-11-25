@@ -1,0 +1,2077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Block &amp; Beam — a place that feels like home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&family=DM+Sans:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --cream:#EEF6FC;
+    --beige:#DCEBF7;
+    --sage:#5B7FA6;
+    --sage-deep:#35516F;
+    --terracotta:#2F4B6E;
+    --terracotta-deep:#22394F;
+    --walnut:#4A342A;
+    --walnut-soft:#7A6355;
+    --white:#FFFFFF;
+    --line:#D8E3ED;
+    --radius-lg:28px;
+    --radius-md:18px;
+    --radius-sm:12px;
+    --shadow:0 12px 30px -14px rgba(47,75,110,0.22);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--cream);
+    color:var(--walnut);
+    font-family:'Inter', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{ font-family:'Poppins', sans-serif; color:var(--walnut); font-weight:600; }
+  a{ text-decoration:none; color:inherit; }
+  ul{ list-style:none; }
+  img{ max-width:100%; display:block; }
+  button{ font-family:inherit; cursor:pointer; border:none; }
+  .eyebrow{
+    font-family:'DM Sans', sans-serif;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--terracotta-deep);
+    font-weight:600;
+  }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 32px; }
+
+  @media (min-width: 1440px){
+    .wrap{ max-width:1360px; padding:0 48px; }
+    .hero{ padding:96px 0 76px; }
+    .hero h1{ font-size:3.35rem; }
+    .hero-grid{ gap:72px; }
+    section{ padding:92px 0; }
+    .section-head h2{ font-size:2.2rem; }
+    .listing-grid{ gap:30px; }
+    .msg-shell{ grid-template-columns:270px 1fr 260px; }
+  }
+  :focus-visible{ outline:2px solid var(--terracotta-deep); outline-offset:3px; }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
+
+  /* ---------- signature beam-joint divider ---------- */
+  .beam-divider{ width:100%; overflow:hidden; line-height:0; }
+  .beam-divider svg{ width:100%; height:34px; display:block; }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(238,246,252,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:78px;
+  }
+  .logo{ display:flex; align-items:center; gap:10px; }
+  .logo-mark{ width:34px; height:34px; }
+  .logo-text{
+    font-family:'Poppins', sans-serif; font-weight:700; font-size:1.28rem;
+    letter-spacing:-0.01em; color:var(--walnut);
+  }
+  .logo-text span{ color:var(--terracotta); }
+  .nav-links{ display:flex; align-items:center; gap:34px; }
+  .nav-links a{
+    font-size:0.92rem; font-weight:500; color:var(--walnut-soft);
+    transition:color .2s;
+    position:relative;
+  }
+  .nav-links a:hover{ color:var(--walnut); }
+  .nav-cta{
+    display:flex; align-items:center; gap:16px;
+  }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:12px 22px; border-radius:100px;
+    font-weight:600; font-size:0.92rem;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  .btn-primary{ background:var(--terracotta); color:var(--white); box-shadow:0 10px 22px -10px rgba(169,95,68,0.55); }
+  .btn-primary:hover{ background:var(--terracotta-deep); transform:translateY(-1px); }
+  .btn-ghost{ color:var(--walnut); font-weight:500; }
+  .btn-outline{
+    border:1.5px solid var(--walnut); color:var(--walnut); background:transparent;
+    padding:10px 20px;
+  }
+  .btn-outline:hover{ background:var(--walnut); color:var(--cream); }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding:76px 0 60px; position:relative; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center; }
+  .hero-search-wrap{ grid-column:1 / -1; margin-top:12px; }
+  .hero h1{
+    font-size:2.85rem; line-height:1.14; letter-spacing:-0.015em;
+    margin:16px 0 20px;
+  }
+  .hero h1 em{ font-style:normal; color:var(--terracotta); }
+  .hero p.lead{ font-size:1.06rem; color:var(--walnut-soft); max-width:480px; margin-bottom:34px; }
+
+  .hero-art{ position:relative; }
+  .hero-art .card-photo{
+    border-radius:var(--radius-lg);
+    overflow:hidden; box-shadow:var(--shadow);
+    aspect-ratio:4/4.6;
+  }
+  .hero-art .card-photo .ph{
+    width:100%; height:100%;
+    background:
+      radial-gradient(circle at 30% 22%, rgba(255,255,255,0.5), transparent 40%),
+      linear-gradient(155deg, #A9C7E3 0%, #6E93B8 45%, #2F4B6E 100%);
+  }
+  .float-chip{
+    position:absolute; background:var(--white); border-radius:var(--radius-md);
+    box-shadow:var(--shadow); padding:14px 18px; display:flex; align-items:center; gap:10px;
+  }
+  .float-chip.chip-a{ top:8%; left:-8%; }
+  .float-chip.chip-b{ bottom:10%; right:-6%; }
+  .float-chip .icon-dot{
+    width:34px; height:34px; border-radius:50%; background:var(--beige);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .float-chip .chip-label{ font-size:0.72rem; color:var(--walnut-soft); }
+  .float-chip .chip-value{ font-family:'Poppins',sans-serif; font-weight:600; font-size:0.95rem; }
+
+  /* search bar */
+  .search-panel{
+    background:var(--white); border-radius:var(--radius-lg);
+    box-shadow:var(--shadow); padding:22px 24px;
+    display:grid; grid-template-columns:1.2fr 1fr 1fr 1fr auto; gap:0;
+    margin-top:8px;
+  }
+  .search-field{ padding:6px 20px; border-right:1px solid var(--line); }
+  .search-field:first-child{ padding-left:4px; }
+  .search-field label{ display:block; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--walnut-soft); margin-bottom:5px; font-weight:600; }
+  .search-field input{
+    border:none; background:transparent; font-family:'Inter',sans-serif; font-size:0.92rem; color:var(--walnut); width:100%;
+  }
+  .search-field input:focus{ outline:none; }
+  .search-btn{
+    background:var(--terracotta); color:var(--white); border-radius:var(--radius-md);
+    padding:0 26px; font-weight:600; display:flex; align-items:center; gap:8px; margin-left:14px;
+    transition:background .2s;
+  }
+  .search-btn:hover{ background:var(--terracotta-deep); }
+
+  .quick-filters{ display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+  .qf-chip{
+    padding:9px 16px; border-radius:100px; background:var(--white); border:1px solid var(--line);
+    font-size:0.83rem; font-weight:500; color:var(--walnut-soft);
+    transition:all .18s;
+  }
+  .qf-chip:hover, .qf-chip.active{ background:var(--sage); border-color:var(--sage); color:var(--white); }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{ padding:76px 0; }
+  .section-head{ display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:38px; gap:24px; }
+  .section-head h2{ font-size:1.9rem; margin-top:8px; letter-spacing:-0.01em; }
+  .section-head p{ color:var(--walnut-soft); max-width:480px; font-size:0.95rem; }
+
+  /* ---------- LISTINGS ---------- */
+  .listing-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:26px; }
+  .listing-card{
+    background:var(--white); border-radius:var(--radius-lg); overflow:hidden;
+    box-shadow:var(--shadow); cursor:pointer; transition:transform .22s ease;
+  }
+  .listing-card:hover{ transform:translateY(-5px); }
+  .listing-photo{ aspect-ratio:4/3; position:relative; overflow:hidden; }
+  .listing-photo .ph{ width:100%; height:100%; background-size:cover; background-position:center; }
+  .fav-btn{
+    position:absolute; top:14px; right:14px; width:36px; height:36px; border-radius:50%;
+    background:rgba(238,246,252,0.9); display:flex; align-items:center; justify-content:center;
+    backdrop-filter:blur(4px);
+  }
+  .listing-tag{
+    position:absolute; top:14px; left:14px; background:var(--white); border-radius:100px;
+    padding:5px 12px; font-size:0.7rem; font-weight:600; color:var(--sage-deep);
+  }
+  .listing-body{ padding:20px 20px 22px; }
+  .listing-top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
+  .listing-name{ font-family:'Poppins',sans-serif; font-weight:600; font-size:1.04rem; }
+  .listing-rent{ font-family:'Poppins',sans-serif; font-weight:700; color:var(--terracotta-deep); font-size:1.02rem; white-space:nowrap; }
+  .listing-rent small{ font-family:'Inter',sans-serif; font-weight:400; color:var(--walnut-soft); font-size:0.72rem; }
+  .listing-loc{ font-size:0.82rem; color:var(--walnut-soft); margin-bottom:14px; }
+  .listing-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px; }
+  .tag-pill{ font-size:0.7rem; padding:4px 10px; border-radius:100px; background:var(--beige); color:var(--walnut-soft); font-weight:500; }
+  .listing-foot{ display:flex; align-items:center; justify-content:space-between; padding-top:14px; border-top:1px dashed var(--line); }
+  .host-mini{ display:flex; align-items:center; gap:8px; font-size:0.78rem; color:var(--walnut-soft); }
+  .host-avatar{ width:26px; height:26px; border-radius:50%; background:var(--sage); color:var(--white); font-size:0.7rem; font-weight:700; display:flex; align-items:center; justify-content:center; font-family:'Poppins',sans-serif; }
+
+  /* ---------- FILTER STRIP ---------- */
+  .filter-strip{
+    position:sticky; top:78px; z-index:30; background:var(--beige);
+    border-radius:var(--radius-lg); padding:18px 24px; margin-bottom:44px;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  .filter-strip .fs-label{ font-weight:600; font-size:0.85rem; color:var(--walnut); margin-right:4px; }
+  .fs-pill{
+    background:var(--white); padding:8px 15px; border-radius:100px; font-size:0.8rem; color:var(--walnut-soft);
+    display:flex; align-items:center; gap:6px; font-weight:500;
+  }
+
+  /* ---------- WHY CHOOSE ---------- */
+  .why-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .why-card{
+    background:var(--white); border-radius:var(--radius-md); padding:30px 26px;
+    border:1px solid var(--line);
+  }
+  .why-icon{
+    width:46px; height:46px; border-radius:14px; background:var(--beige);
+    display:flex; align-items:center; justify-content:center; margin-bottom:18px;
+  }
+  .why-card h3{ font-size:1.05rem; margin-bottom:8px; }
+  .why-card p{ font-size:0.87rem; color:var(--walnut-soft); }
+
+  /* ---------- FULL LISTING DETAIL (host page) ---------- */
+  .detail-shell{ display:grid; grid-template-columns:320px 1fr; gap:32px; align-items:start; }
+
+  .host-card{
+    background:var(--white); border-radius:var(--radius-lg); border:1px solid var(--line);
+    box-shadow:var(--shadow); padding:28px 24px; position:sticky; top:96px;
+  }
+  .host-card-top{ text-align:center; margin-bottom:18px; }
+  .host-card .host-avatar{ width:72px; height:72px; font-size:1.5rem; margin:0 auto 14px; }
+  .host-card-name{ font-family:'Poppins',sans-serif; font-weight:600; font-size:1.15rem; display:flex; align-items:center; justify-content:center; gap:6px; }
+  .host-card-since{ font-size:0.78rem; color:var(--walnut-soft); margin-top:4px; }
+
+  .host-stat-list{ display:flex; flex-direction:column; gap:10px; margin:20px 0; padding:16px 0; border-top:1px dashed var(--line); border-bottom:1px dashed var(--line); }
+  .host-stat{ display:flex; align-items:center; gap:9px; font-size:0.82rem; color:var(--walnut); }
+  .host-stat .dot-live{ width:8px; height:8px; border-radius:50%; background:var(--sage-deep); flex-shrink:0; }
+
+  .host-about h4, .host-card h4{ font-size:0.85rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--walnut-soft); margin-bottom:10px; font-weight:600; font-family:'DM Sans',sans-serif; }
+  .host-about p{ font-size:0.86rem; color:var(--walnut); margin-bottom:18px; }
+
+  .lang-row{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+  .lang-pill{ background:var(--beige); padding:5px 12px; border-radius:100px; font-size:0.78rem; font-weight:500; }
+
+  .household-tags{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+  .household-tags .tag-pill{ background:var(--white); border:1px solid var(--line); }
+
+  .verify-list{ display:flex; flex-direction:column; gap:9px; }
+  .verify-item{ display:flex; align-items:center; gap:8px; font-size:0.82rem; color:var(--walnut); }
+  .verify-item .check{ width:16px; height:16px; border-radius:50%; background:var(--sage); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+  /* main detail column */
+  .detail-block{ background:var(--white); border-radius:var(--radius-md); border:1px solid var(--line); padding:28px 26px; margin-bottom:22px; }
+  .detail-block h3{ font-size:1.1rem; margin-bottom:18px; }
+  .detail-block .block-sub{ font-size:0.85rem; color:var(--walnut-soft); margin-top:-12px; margin-bottom:18px; }
+
+  .lease-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .lease-item .fk{ font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--walnut-soft); margin-bottom:5px; }
+  .lease-item .fv{ font-family:'Poppins',sans-serif; font-weight:600; font-size:1rem; }
+  .lease-item .fv.accent{ color:var(--terracotta-deep); }
+  .lease-note{ font-size:0.78rem; color:var(--walnut-soft); margin-top:6px; }
+
+  .feature-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px 18px; }
+  .feature-item{ display:flex; align-items:center; gap:9px; font-size:0.86rem; color:var(--walnut); }
+
+  .spaces-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .space-col h5{ font-family:'Poppins',sans-serif; font-weight:600; font-size:0.92rem; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--line); }
+  .space-col ul{ display:flex; flex-direction:column; gap:8px; }
+  .space-col li{ font-size:0.84rem; color:var(--walnut-soft); display:flex; align-items:center; gap:8px; }
+  .space-col li::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--terracotta); flex-shrink:0; }
+
+  .loc-strip{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .loc-pin{ width:36px; height:36px; border-radius:50%; background:var(--beige); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .loc-name{ font-family:'Poppins',sans-serif; font-weight:600; font-size:0.98rem; }
+  .loc-area{ font-size:0.85rem; color:var(--walnut-soft); margin-bottom:20px; max-width:520px; }
+
+  .nearby-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .nearby-item{ background:var(--beige); border-radius:14px; padding:14px 16px; }
+  .nearby-item .ni-top{ display:flex; align-items:center; gap:8px; font-size:0.86rem; font-weight:600; margin-bottom:4px; }
+  .nearby-item .ni-time{ font-size:0.76rem; color:var(--walnut-soft); }
+
+  .amenity-check-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .amenity-check{ display:flex; align-items:center; gap:8px; font-size:0.85rem; }
+  .amenity-check .check{ width:16px; height:16px; border-radius:50%; background:var(--sage); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+  .status-block{ display:flex; align-items:center; justify-content:space-between; background:var(--beige); border-radius:var(--radius-md); padding:20px 24px; }
+  .status-live{ display:flex; align-items:center; gap:10px; font-family:'Poppins',sans-serif; font-weight:600; color:var(--sage-deep); }
+  .status-live .dot-live{ width:10px; height:10px; border-radius:50%; background:var(--sage-deep); box-shadow:0 0 0 4px rgba(95,122,92,0.18); }
+  .status-updated{ font-size:0.78rem; color:var(--walnut-soft); }
+
+  @media (max-width: 980px){
+    .detail-shell{ grid-template-columns:1fr; }
+    .host-card{ position:static; }
+    .lease-grid, .feature-grid, .spaces-grid, .nearby-grid, .amenity-check-grid{ grid-template-columns:repeat(2,1fr); }
+  }
+
+  /* ---------- TESTIMONIALS ---------- */
+  .testi-track{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .testi-card{
+    background:var(--sage); background:linear-gradient(160deg, var(--beige) 0%, var(--white) 60%);
+    border-radius:var(--radius-md); padding:26px; border:1px solid var(--line);
+  }
+  .testi-stars{ color:var(--terracotta); font-size:0.85rem; margin-bottom:12px; letter-spacing:2px; }
+  .testi-quote{ font-size:0.9rem; color:var(--walnut); margin-bottom:18px; }
+  .testi-person{ display:flex; align-items:center; gap:10px; }
+  .testi-person .host-avatar{ background:var(--terracotta); width:34px; height:34px; font-size:0.78rem; }
+  .testi-meta{ font-size:0.76rem; color:var(--walnut-soft); }
+  .testi-meta strong{ display:block; font-size:0.86rem; color:var(--walnut); font-weight:600; font-family:'Poppins',sans-serif; }
+
+  /* ---------- MESSAGE SECTION ---------- */
+  .message-section{ background:var(--walnut); padding:80px 0 90px; }
+  .message-section .section-head h2, .message-section .eyebrow{ color:var(--cream); }
+  .message-section .section-head p{ color:#A9BED1; }
+  .msg-shell{
+    background:var(--cream); border-radius:var(--radius-lg); overflow:hidden;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.45);
+    display:grid; grid-template-columns:250px 1fr 240px;
+  }
+  .msg-side{ border-right:1px solid var(--line); padding:18px 0; overflow-y:auto; }
+  .msg-side-head{ padding:0 18px 14px; font-family:'Poppins',sans-serif; font-weight:600; font-size:0.92rem; }
+  .convo{
+    display:flex; gap:10px; padding:12px 18px; align-items:flex-start; cursor:pointer;
+    border-left:3px solid transparent;
+  }
+  .convo.active{ background:var(--beige); border-left-color:var(--terracotta); }
+  .convo:hover:not(.active){ background:rgba(220,235,247,0.5); }
+  .convo-name{ font-size:0.86rem; font-weight:600; font-family:'Poppins',sans-serif; }
+  .convo-preview{ font-size:0.76rem; color:var(--walnut-soft); margin-top:2px; max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .convo-time{ font-size:0.68rem; color:var(--walnut-soft); margin-left:auto; flex-shrink:0; }
+  .badge-status{ font-size:0.62rem; font-weight:700; padding:2px 8px; border-radius:100px; background:var(--sage); color:var(--white); display:inline-block; margin-top:4px; }
+
+  .msg-main{ display:flex; flex-direction:column; }
+  .msg-main-head{
+    padding:16px 24px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:12px;
+  }
+  .msg-main-head .host-avatar{ width:38px; height:38px; font-size:0.85rem; }
+  .msg-main-head-name{ font-family:'Poppins',sans-serif; font-weight:600; font-size:0.94rem; display:flex; align-items:center; gap:6px; }
+  .verified-dot{ width:14px; height:14px; }
+  .msg-main-head-sub{ font-size:0.75rem; color:var(--walnut-soft); }
+
+  .chat-area{ flex:1; padding:22px 26px; overflow-y:auto; display:flex; flex-direction:column; gap:14px; }
+  .date-sep{ text-align:center; font-size:0.7rem; color:var(--walnut-soft); margin:8px 0; }
+
+  .bubble-wrap{ position:relative; max-width:66%; display:flex; flex-direction:column; }
+  .bubble-wrap.side-out{ align-self:flex-end; align-items:flex-end; }
+  .bubble-wrap.side-in{ align-self:flex-start; align-items:flex-start; }
+
+  .bubble-sender{ font-size:0.68rem; font-weight:600; color:var(--walnut-soft); margin-bottom:3px; padding:0 4px; }
+  .bubble{ padding:12px 16px; border-radius:18px; font-size:0.86rem; line-height:1.45; white-space:pre-wrap; word-break:break-word; }
+  .bubble-wrap.side-in .bubble{ background:var(--beige); }
+  .bubble-wrap.side-out .bubble{ background:var(--terracotta); color:var(--white); }
+
+  .bubble-actions{
+    position:absolute; top:-14px; display:none; gap:4px;
+  }
+  .bubble-wrap.side-in .bubble-actions{ left:4px; }
+  .bubble-wrap.side-out .bubble-actions{ right:4px; }
+  .bubble-wrap:hover .bubble-actions{ display:flex; }
+  .bubble-action-btn{
+    width:24px; height:24px; border-radius:50%; background:var(--white); box-shadow:var(--shadow);
+    display:flex; align-items:center; justify-content:center; transition:transform .15s;
+  }
+  .bubble-action-btn:hover{ transform:scale(1.1); }
+
+  .bubble-edit-box{ display:flex; flex-direction:column; gap:6px; width:min(280px, 60vw); }
+  .bubble-edit-box textarea{
+    width:100%; border:1px solid var(--sage); border-radius:12px; padding:10px 12px; font-family:'Inter',sans-serif;
+    font-size:0.86rem; resize:vertical; min-height:60px; background:var(--white);
+  }
+  .bubble-edit-actions{ display:flex; gap:8px; justify-content:flex-end; }
+  .bubble-edit-actions button{
+    font-size:0.75rem; font-weight:600; padding:6px 12px; border-radius:100px;
+  }
+  .bubble-save-btn{ background:var(--sage); color:var(--white); }
+  .bubble-cancel-btn{ background:var(--beige); color:var(--walnut); }
+
+  .chat-empty{ margin:auto; text-align:center; color:var(--walnut-soft); font-size:0.85rem; }
+
+  .chat-reset-btn{
+    font-size:0.72rem; font-weight:600; color:var(--walnut-soft); background:var(--beige);
+    padding:6px 12px; border-radius:100px; display:flex; align-items:center; gap:5px; flex-shrink:0;
+  }
+  .chat-reset-btn:hover{ background:#C7DCEF; color:var(--walnut); }
+
+  .add-message-form{ padding:14px 20px; border-top:1px solid var(--line); display:flex; gap:8px; align-items:center; }
+  .amf-name-input{
+    width:92px; flex-shrink:0; border:1px solid var(--line); border-radius:100px; padding:11px 14px; font-size:0.8rem;
+    font-family:'Inter',sans-serif; background:var(--beige);
+  }
+  .amf-name-input:focus{ outline:none; border-color:var(--sage); }
+  .side-toggle{ display:flex; border-radius:100px; overflow:hidden; border:1px solid var(--line); flex-shrink:0; }
+  .side-toggle button{ padding:9px 11px; font-size:0.76rem; font-weight:700; background:var(--white); color:var(--walnut-soft); }
+  .side-toggle button.active{ background:var(--terracotta); color:var(--white); }
+  .amf-textarea{
+    flex:1; border:1px solid var(--line); border-radius:100px; padding:11px 18px; font-size:0.86rem;
+    font-family:'Inter',sans-serif; background:var(--beige); resize:none; min-height:44px; max-height:44px;
+    overflow-y:auto;
+  }
+  .amf-textarea:focus{ outline:none; border-color:var(--sage); }
+  .amf-add-btn{
+    width:44px; height:44px; border-radius:50%; background:var(--terracotta); color:var(--white); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; transition:background .2s;
+  }
+  .amf-add-btn:hover{ background:var(--terracotta-deep); }
+  .amf-add-btn:disabled{ background:var(--walnut-soft); cursor:not-allowed; }
+
+  .msg-info{ border-left:1px solid var(--line); padding:22px 18px; overflow-y:auto; }
+  .msg-info h4{ font-size:0.92rem; margin-bottom:14px; }
+  .info-row{ display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; padding:8px 0; border-bottom:1px dashed var(--line); color:var(--walnut-soft); gap:10px; }
+  .info-row strong{ color:var(--walnut); font-weight:600; }
+  .status-pill{ display:inline-block; background:var(--sage); color:var(--white); font-size:0.68rem; font-weight:700; padding:3px 10px; border-radius:100px; }
+
+  .info-row-editable{ position:relative; cursor:pointer; }
+  .info-row-editable .iv-value{ display:flex; align-items:center; gap:6px; }
+  .info-row-editable .iv-edit-icon{ opacity:0; transition:opacity .15s; flex-shrink:0; }
+  .info-row-editable:hover .iv-edit-icon{ opacity:0.6; }
+  .info-row-editable input{
+    border:1px solid var(--sage); border-radius:8px; padding:4px 8px; font-size:0.8rem; font-family:'Inter',sans-serif;
+    text-align:right; width:120px; background:var(--white);
+  }
+
+  .quick-actions{ margin-top:18px; display:flex; flex-direction:column; gap:8px; }
+  .qa-btn{
+    text-align:left; padding:10px 14px; border-radius:12px; background:var(--beige); font-size:0.8rem; font-weight:500;
+    display:flex; align-items:center; gap:8px; transition:background .18s;
+  }
+  .qa-btn:hover{ background:var(--sage); color:var(--white); }
+  .qa-btn.qa-disabled{ cursor:default; }
+  .qa-btn.qa-disabled:hover{ background:var(--beige); color:var(--walnut); }
+
+  /* payment / agreement side modals */
+  .side-modal-overlay{
+    position:fixed; inset:0; background:rgba(90,70,54,0.5); backdrop-filter:blur(2px);
+    display:none; align-items:center; justify-content:center; z-index:110; padding:24px;
+  }
+  .side-modal-overlay.open{ display:flex; }
+  .side-modal-box{
+    background:var(--cream); border-radius:var(--radius-lg); width:100%; max-width:460px; max-height:82vh;
+    overflow-y:auto; box-shadow:0 30px 60px -18px rgba(0,0,0,0.4); padding:26px 24px;
+  }
+  .side-modal-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+  .side-modal-head h3{ font-size:1.05rem; }
+  .side-modal-close{ width:30px; height:30px; border-radius:50%; background:var(--white); box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+  .agreement-doc{ background:var(--white); border:1px solid var(--line); border-radius:14px; padding:20px; font-size:0.82rem; color:var(--walnut); line-height:1.7; margin-bottom:18px; }
+  .agreement-doc .ad-title{ font-family:'Poppins',sans-serif; font-weight:600; font-size:0.95rem; margin-bottom:10px; }
+  .agreement-doc .ad-row{ display:flex; justify-content:space-between; color:var(--walnut-soft); }
+
+  .payment-list{ display:flex; flex-direction:column; gap:10px; margin-bottom:18px; }
+  .payment-item{ position:relative; background:var(--white); border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+  .payment-item .pi-top{ display:flex; justify-content:space-between; align-items:center; }
+  .payment-item .pi-amount{ font-family:'Poppins',sans-serif; font-weight:600; font-size:0.95rem; color:var(--sage-deep); }
+  .payment-item .pi-date{ font-size:0.75rem; color:var(--walnut-soft); margin-top:2px; }
+  .payment-item .pi-note{ font-size:0.8rem; color:var(--walnut); margin-top:6px; }
+  .payment-item .pi-actions{ position:absolute; top:10px; right:10px; display:none; gap:5px; }
+  .payment-item:hover .pi-actions{ display:flex; }
+  .payment-item .paid-badge{ font-size:0.65rem; font-weight:700; background:var(--sage); color:var(--white); padding:2px 9px; border-radius:100px; }
+
+  .payment-form{ display:flex; flex-direction:column; gap:8px; background:var(--beige); border-radius:14px; padding:14px 16px; }
+  .payment-form-row{ display:flex; gap:8px; }
+  .payment-form input, .payment-form textarea{
+    border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:0.8rem; font-family:'Inter',sans-serif; background:var(--white);
+  }
+  .payment-form input{ flex:1; }
+  .payment-form textarea{ resize:none; min-height:38px; }
+  .payment-add-full-btn{
+    background:var(--terracotta); color:var(--white); border-radius:10px; padding:9px; font-size:0.8rem; font-weight:600; text-align:center;
+  }
+  .payment-add-full-btn:hover{ background:var(--terracotta-deep); }
+  .payment-empty{ text-align:center; color:var(--walnut-soft); font-size:0.82rem; padding:20px 0; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ background:var(--cream); padding:50px 0 34px; border-top:1px solid var(--line); }
+  .foot-grid{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+  .foot-links{ display:flex; gap:26px; font-size:0.85rem; color:var(--walnut-soft); }
+  .foot-note{ font-size:0.78rem; color:var(--walnut-soft); margin-top:24px; }
+
+  /* ---------- MODAL (room detail) ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(90,70,54,0.55); backdrop-filter:blur(3px);
+    display:none; align-items:center; justify-content:center; z-index:100; padding:30px;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal-box{
+    background:var(--cream); border-radius:var(--radius-lg); max-width:920px; width:100%;
+    max-height:88vh; overflow-y:auto; box-shadow:0 40px 80px -20px rgba(0,0,0,0.4);
+  }
+  .modal-close{
+    position:sticky; top:16px; float:right; margin-right:16px; width:36px; height:36px; border-radius:50%;
+    background:var(--white); box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center; z-index:5;
+  }
+  .modal-gallery{ display:grid; grid-template-columns:1.5fr 1fr; gap:6px; padding:16px; }
+  .modal-gallery .ph{ border-radius:16px; aspect-ratio:4/3.2; background-size:cover; background-position:center; }
+  .modal-gallery .g-side{ display:grid; grid-template-rows:1fr 1fr; gap:6px; }
+  .modal-body{ padding:8px 40px 44px; }
+  .modal-body h3{ font-size:1.5rem; margin-bottom:6px; }
+  .modal-loc{ color:var(--walnut-soft); font-size:0.88rem; margin-bottom:20px; }
+  .modal-facts{ display:flex; gap:26px; flex-wrap:wrap; padding:18px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin-bottom:24px; }
+  .modal-fact .fk{ font-size:0.7rem; color:var(--walnut-soft); text-transform:uppercase; letter-spacing:0.06em; }
+  .modal-fact .fv{ font-family:'Poppins',sans-serif; font-weight:600; font-size:0.95rem; margin-top:3px; }
+  .modal-desc{ font-size:0.92rem; color:var(--walnut-soft); margin-bottom:26px; max-width:640px; }
+  .amenity-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:28px; }
+  .amenity-item{ display:flex; align-items:center; gap:8px; font-size:0.84rem; color:var(--walnut); }
+  .rules-list{ font-size:0.85rem; color:var(--walnut-soft); display:flex; flex-direction:column; gap:8px; margin-bottom:28px; }
+  .host-box{
+    display:flex; align-items:center; justify-content:space-between; background:var(--white); border:1px solid var(--line);
+    border-radius:16px; padding:18px 22px;
+  }
+  .host-box-left{ display:flex; align-items:center; gap:14px; }
+  .host-box .host-avatar{ width:48px; height:48px; font-size:1rem; }
+  .host-box-name{ font-family:'Poppins',sans-serif; font-weight:600; font-size:0.95rem; display:flex; align-items:center; gap:6px; }
+  .host-box-sub{ font-size:0.78rem; color:var(--walnut-soft); margin-top:2px; }
+
+  @media (max-width: 980px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .listing-grid, .why-grid, .testi-track{ grid-template-columns:1fr; }
+    .search-panel{ grid-template-columns:1fr; }
+    .search-field{ border-right:none; border-bottom:1px solid var(--line); padding:12px 4px; }
+    .nav-links{ display:none; }
+    .msg-shell{ grid-template-columns:1fr; }
+    .msg-side, .msg-info{ display:none; }
+    .modal-gallery{ grid-template-columns:1fr; }
+  }
+
+  /* =====================================================
+     iMESSAGE-STYLE CHAT (fixed height, header + input stay put)
+     Keep this block at the very bottom so it overrides the rules above.
+     ===================================================== */
+  .msg-shell{
+    height:clamp(520px, 78vh, 760px);
+    grid-template-rows:minmax(0,1fr);
+  }
+  .msg-side, .msg-info{ min-height:0; overflow-y:auto; }
+  .msg-main{ display:flex; flex-direction:column; min-height:0; overflow:hidden; }
+  .msg-main-head{
+    flex:0 0 auto; z-index:2;
+    background:rgba(238,246,252,0.85);
+    backdrop-filter:blur(12px);
+  }
+  .chat-area{
+    flex:1 1 0; min-height:0; overflow-y:auto;
+    overscroll-behavior:contain; gap:2px;
+  }
+
+  /* bubbles */
+  .bubble-sender{ display:none; }
+  .bubble-wrap.first{ margin-top:10px; }
+  .bubble-wrap.side-in.last .bubble{ border-bottom-left-radius:6px; }
+  .bubble-wrap.side-out.last .bubble{ border-bottom-right-radius:6px; }
+  .bubble-time{
+    display:block; text-align:right;
+    font-size:0.65rem; margin-top:4px; color:var(--walnut-soft);
+  }
+  .bubble-wrap.side-out .bubble-time{ color:rgba(255,255,255,0.75); }
+
+  /* date separator + delivered status */
+  .date-sep{
+    text-align:center; font-size:0.68rem; color:var(--walnut-soft);
+    margin:14px 0 6px;
+  }
+  .date-sep strong{ font-weight:600; }
+  .delivered{
+    align-self:flex-end; font-size:0.65rem; font-weight:500;
+    color:var(--walnut-soft); margin:2px 6px 0 0;
+    cursor:pointer; user-select:none;
+  }
+
+  /* add-message form (with editable date & time) */
+  .add-message-form{ flex:0 0 auto; flex-direction:column; align-items:stretch; gap:8px; }
+  .amf-meta, .amf-row{ display:flex; gap:8px; align-items:center; }
+  .amf-meta{ flex-wrap:wrap; }
+  .amf-row .amf-textarea{ flex:1; }
+  .amf-mini{
+    border:1px solid var(--line); border-radius:100px; padding:9px 12px;
+    font-size:0.78rem; font-family:'Inter',sans-serif;
+    background:var(--beige); color:var(--walnut);
+  }
+  .bubble-edit-meta{ display:flex; gap:6px; }
+  .bubble-edit-meta input{
+    flex:1; min-width:0; border:1px solid var(--sage); border-radius:10px;
+    padding:6px 8px; font-size:0.75rem; background:var(--white);
+  }
+
+  /* =====================================================
+     PHONE / iPAD (portrait): chat height follows the screen height
+     100dvh = real visible height (handles the browser bar on iOS/Android)
+     78px = sticky nav height
+     ===================================================== */
+  @media (max-width: 980px){
+    .message-section{ padding:28px 0 36px; }
+    .message-section .wrap{ padding:0 12px; }
+    .message-section .section-head{ margin-bottom:20px; }
+    .msg-shell{
+      scroll-margin-top:90px;
+      height:calc(100vh - 78px - 24px);
+      height:calc(100dvh - 78px - 24px);
+      min-height:420px;
+      border-radius:22px;
+    }
+    .msg-main-head{ padding:12px 16px; }
+    .chat-area{ padding:16px 14px; }
+    .bubble-wrap{ max-width:82%; }
+    .add-message-form{ padding:10px 12px; }
+  }
+
+  /* =====================================================
+     Hidden options panel (Name, L/R, date, time) + round R reset
+     ===================================================== */
+  .amf-options{ display:none; gap:8px; align-items:flex-end; }
+  .amf-options.open{ display:flex; }
+  .amf-options .amf-meta{ flex:1; }
+  .amf-send-btn{
+    flex-shrink:0; background:var(--terracotta); color:var(--white);
+    border-radius:100px; padding:11px 20px; font-size:0.82rem; font-weight:600;
+    transition:background .2s;
+  }
+  .amf-send-btn:hover{ background:var(--terracotta-deep); }
+
+  .chat-reset-btn{
+    width:28px; height:28px; padding:0; border-radius:50%;
+    justify-content:center; font-size:0.72rem; font-weight:700;
+    opacity:0.35; transition:opacity .2s;
+  }
+  .chat-reset-btn:hover, .chat-reset-btn:focus-visible{ opacity:1; }
+
+  /* =====================================================
+     Editable profile (replaces "Sign In")
+     ===================================================== */
+  .profile-btn{
+    display:inline-flex; align-items:center; gap:10px;
+    background:transparent; color:var(--walnut);
+    font-weight:500; font-size:0.92rem; padding:6px 10px; border-radius:100px;
+    transition:background .18s;
+  }
+  .profile-btn:hover{ background:var(--beige); }
+  .profile-avatar{
+    width:34px; height:34px; border-radius:50%; flex-shrink:0;
+    background:var(--sage) center/cover no-repeat; color:var(--white);
+    font-family:'Poppins',sans-serif; font-weight:600; font-size:0.85rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .profile-avatar[hidden]{ display:none; }
+  .profile-avatar-lg{ width:96px; height:96px; font-size:1.8rem; margin:0 auto; border:3px solid var(--white); box-shadow:var(--shadow); cursor:pointer; }
+  .profile-edit{ display:flex; flex-direction:column; align-items:stretch; gap:12px; text-align:center; }
+  .profile-photo-actions{ display:flex; justify-content:center; gap:18px; }
+  .profile-link-btn{ background:none; color:var(--sage-deep); font-size:0.8rem; font-weight:600; padding:4px; }
+  .profile-link-btn:hover{ text-decoration:underline; }
+  .profile-name-input{
+    border:1px solid var(--line); border-radius:12px; padding:11px 14px;
+    font-size:0.9rem; font-family:'Inter',sans-serif; background:var(--white); color:var(--walnut); text-align:center;
+  }
+  .profile-name-input:focus{ outline:none; border-color:var(--sage); }
+
+  /* =====================================================
+     Editable agreement + payment schedule
+     ===================================================== */
+  .agreement-doc .ad-row{ align-items:center; gap:12px; margin-bottom:6px; }
+  .ad-input{
+    border:1px solid var(--line); border-radius:10px; padding:6px 10px; font-size:0.8rem;
+    font-family:'Inter',sans-serif; background:var(--beige); color:var(--walnut);
+    text-align:right; width:160px; max-width:58%;
+  }
+  .ad-input:focus{ outline:none; border-color:var(--sage); }
+  .ad-hint{ font-size:0.7rem; color:var(--walnut-soft); margin-top:8px; line-height:1.5; }
+
+  .payment-gen{ margin-bottom:12px; }
+  .payment-gen-head{ display:flex; justify-content:space-between; align-items:center; }
+  .payment-gen-box{
+    display:none; flex-direction:column; gap:8px; margin-top:8px;
+    background:var(--beige); border-radius:14px; padding:14px 16px;
+  }
+  .payment-gen-box.open{ display:flex; }
+  .payment-gen-box input{
+    border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:0.8rem;
+    font-family:'Inter',sans-serif; background:var(--white); flex:1; min-width:0;
+  }
+  .payment-item .paid-badge{ cursor:pointer; user-select:none; }
+  .payment-item .paid-badge.upcoming{ background:var(--beige); color:var(--walnut-soft); border:1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header>
+  <nav class="wrap">
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 40 40" fill="none">
+        <rect x="2" y="18" width="36" height="20" rx="6" fill="#2F4B6E"/>
+        <path d="M4 19L20 5L36 19" stroke="#4A342A" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <rect x="17" y="26" width="6" height="12" rx="1.5" fill="#EEF6FC"/>
+      </svg>
+      <span class="logo-text">Block<span>&amp;</span>Beam</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#listings">Explore</a></li>
+      <li><a href="#listings">Find a Room</a></li>
+      <li><a href="#why">Become a Host</a></li>
+      <li><a href="#testimonials">Help Center</a></li>
+    </ul>
+    <div class="nav-cta">
+      <button type="button" class="profile-btn" id="profileBtn" aria-label="Edit profile">
+        <span class="profile-avatar" id="profileAvatar" hidden></span>
+        <span id="profileLabel">Sign In</span>
+      </button>
+      <a href="#listings" class="btn btn-primary">Find a Room</a>
+    </div>
+  </nav>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Rooms &amp; studios, chosen with care</p>
+      <h1>Find a place that feels like <em>home</em>, even when you're miles away.</h1>
+      <p class="lead">We help students and young professionals find comfortable rooms, trusted hosts, and neighbourhoods worth settling into — no jargon, no hidden fees.</p>
+    </div>
+
+    <div class="hero-art">
+      <div class="card-photo"><div class="ph" style="background-image:url('hero.jpg');"></div></div>
+      <div class="float-chip chip-a">
+        <div class="icon-dot">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-9.5-9C1 8.5 3 5 6.5 5c2 0 3.4 1.1 4 2.2C11.1 6.1 12.5 5 14.5 5 18 5 20 8.5 21.5 12 19 16.4 12 21 12 21z" stroke="#2F4B6E" stroke-width="1.8"/></svg>
+        </div>
+        <div><div class="chip-label">Verified hosts</div><div class="chip-value">240+ homes</div></div>
+      </div>
+      <div class="float-chip chip-b">
+        <div class="icon-dot">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12l1.5-6h13L20 12M4 12v7a1 1 0 001 1h2a1 1 0 001-1v-2h8v2a1 1 0 001 1h2a1 1 0 001-1v-7M4 12h16" stroke="#5B7FA6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div><div class="chip-label">Avg. commute</div><div class="chip-value">9 min walk</div></div>
+      </div>
+    </div>
+
+    <div class="hero-search-wrap">
+      <div class="search-panel">
+        <div class="search-field">
+          <label>Location</label>
+          <input type="text" placeholder="Edinburgh, Bristol, Leeds…">
+        </div>
+        <div class="search-field">
+          <label>Move-in date</label>
+          <input type="text" placeholder="Sept 2026">
+        </div>
+        <div class="search-field">
+          <label>Duration</label>
+          <input type="text" placeholder="Term / year">
+        </div>
+        <div class="search-field" style="border-right:none;">
+          <label>Budget</label>
+          <input type="text" placeholder="£450–850 / mo">
+        </div>
+        <button class="search-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="white" stroke-width="2.2"/><path d="M21 21l-4.3-4.3" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>
+          Search
+        </button>
+      </div>
+
+      <div class="quick-filters">
+        <span class="qf-chip active">Student Friendly</span>
+        <span class="qf-chip">Private Room</span>
+        <span class="qf-chip">Bills Included</span>
+        <span class="qf-chip">Fully Furnished</span>
+        <span class="qf-chip">Near University</span>
+        <span class="qf-chip">Female Friendly</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="beam-divider"><svg viewBox="0 0 1200 34" preserveAspectRatio="none"><line x1="0" y1="17" x2="1200" y2="17" stroke="#D8E3ED" stroke-width="2"/><g stroke="#2F4B6E" stroke-width="2.4"><line x1="60" y1="7" x2="60" y2="27"/><line x1="260" y1="7" x2="260" y2="27"/><line x1="460" y1="7" x2="460" y2="27"/><line x1="660" y1="7" x2="660" y2="27"/><line x1="860" y1="7" x2="860" y2="27"/><line x1="1060" y1="7" x2="1060" y2="27"/></g></svg></div>
+
+<!-- ============ FEATURED LISTINGS ============ -->
+<section id="listings">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Featured this week</p>
+        <h2>Rooms people actually stayed in and loved</h2>
+      </div>
+      <p>A short list, kept short on purpose — every home here has a verified host and a guest who'd book again.</p>
+    </div>
+
+    <div class="filter-strip">
+      <span class="fs-label">Quick filter</span>
+      <span class="fs-pill">Private Room</span>
+      <span class="fs-pill">Shared Room</span>
+      <span class="fs-pill">Studio</span>
+      <span class="fs-pill">Under £850</span>
+      <span class="fs-pill">Washing Machine</span>
+      <span class="fs-pill">Quiet Household</span>
+    </div>
+
+    <div class="listing-grid">
+
+      <div class="listing-card" data-room="ivy">
+        <div class="listing-photo">
+          <div class="ph" style="background-image:url('ivy-main.jpg');"></div>
+          <span class="listing-tag">Bills Included</span>
+          <button class="fav-btn" aria-label="Save listing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-9.5-9C1 8.5 3 5 6.5 5c2 0 3.4 1.1 4 2.2C11.1 6.1 12.5 5 14.5 5 18 5 20 8.5 21.5 12 19 16.4 12 21 12 21z" stroke="#4A342A" stroke-width="1.6"/></svg></button>
+        </div>
+        <div class="listing-body">
+          <div class="listing-top">
+            <span class="listing-name">The Ivy Room</span>
+            <span class="listing-rent">£850<small>/mo</small></span>
+          </div>
+          <p class="listing-loc">Marchmont, Edinburgh · 6 min walk to campus</p>
+          <div class="listing-tags">
+            <span class="tag-pill">Furnished</span>
+            <span class="tag-pill">Fast Wi‑Fi</span>
+            <span class="tag-pill">Study Desk</span>
+          </div>
+          <div class="listing-foot">
+            <div class="host-mini"><span class="host-avatar">N</span> Hosted by Nora</div>
+            <span style="font-size:0.75rem;color:var(--sage-deep);font-weight:600;">Available now</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card" data-room="cherry">
+        <div class="listing-photo">
+          <div class="ph" style="background-image:url('cherry-main.jpg');"></div>
+          <span class="listing-tag">Student Host</span>
+          <button class="fav-btn" aria-label="Save listing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-9.5-9C1 8.5 3 5 6.5 5c2 0 3.4 1.1 4 2.2C11.1 6.1 12.5 5 14.5 5 18 5 20 8.5 21.5 12 19 16.4 12 21 12 21z" stroke="#4A342A" stroke-width="1.6"/></svg></button>
+        </div>
+        <div class="listing-body">
+          <div class="listing-top">
+            <span class="listing-name">Cherry Blossom Suite</span>
+            <span class="listing-rent">£920<small>/mo</small></span>
+          </div>
+          <p class="listing-loc">Southside, Edinburgh · 12 min walk to campus</p>
+          <div class="listing-tags">
+            <span class="tag-pill">Private Bath</span>
+            <span class="tag-pill">Laundry</span>
+            <span class="tag-pill">Balcony</span>
+          </div>
+          <div class="listing-foot">
+            <div class="host-mini"><span class="host-avatar">A</span> Hosted by Aiko</div>
+            <span style="font-size:0.75rem;color:var(--sage-deep);font-weight:600;">Available Sept</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card" data-room="walnut">
+        <div class="listing-photo">
+          <div class="ph" style="background-image:url('walnut-main.jpg');"></div>
+          <span class="listing-tag">Long Stay</span>
+          <button class="fav-btn" aria-label="Save listing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-9.5-9C1 8.5 3 5 6.5 5c2 0 3.4 1.1 4 2.2C11.1 6.1 12.5 5 14.5 5 18 5 20 8.5 21.5 12 19 16.4 12 21 12 21z" stroke="#4A342A" stroke-width="1.6"/></svg></button>
+        </div>
+        <div class="listing-body">
+          <div class="listing-top">
+            <span class="listing-name">The Walnut Loft</span>
+            <span class="listing-rent">£810<small>/mo</small></span>
+          </div>
+          <p class="listing-loc">Newington, Edinburgh · 4 min walk to campus</p>
+          <div class="listing-tags">
+            <span class="tag-pill">Furnished</span>
+            <span class="tag-pill">Kitchen</span>
+            <span class="tag-pill">Heating</span>
+          </div>
+          <div class="listing-foot">
+            <div class="host-mini"><span class="host-avatar">M</span> Hosted by Mateo</div>
+            <span style="font-size:0.75rem;color:var(--sage-deep);font-weight:600;">Available now</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card" data-room="khal">
+        <div class="listing-photo">
+          <div class="ph" style="background-image:url('khal-main.jpg');"></div>
+          <span class="listing-tag">Bills Included</span>
+          <button class="fav-btn" aria-label="Save listing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-9.5-9C1 8.5 3 5 6.5 5c2 0 3.4 1.1 4 2.2C11.1 6.1 12.5 5 14.5 5 18 5 20 8.5 21.5 12 19 16.4 12 21 12 21z" stroke="#4A342A" stroke-width="1.6"/></svg></button>
+        </div>
+        <div class="listing-body">
+          <div class="listing-top">
+            <span class="listing-name">The Strange Room</span>
+            <span class="listing-rent">£750<small>/mo</small></span>
+          </div>
+          <p class="listing-loc">Marchmont Crescent, Edinburgh · 15 min walk to campus</p>
+          <div class="listing-tags">
+            <span class="tag-pill">Single Bed</span>
+            <span class="tag-pill">Quiet Household</span>
+            <span class="tag-pill">Long-term</span>
+          </div>
+          <div class="listing-foot">
+            <div class="host-mini"><span class="host-avatar" style="background:var(--terracotta);">K</span> Hosted by Khal</div>
+            <span style="font-size:0.75rem;color:var(--sage-deep);font-weight:600;">Available now</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card" data-room="birch">
+        <div class="listing-photo">
+          <div class="ph" style="background-image:url('birch-main.jpg');"></div>
+          <span class="listing-tag">Bills Included</span>
+          <button class="fav-btn" aria-label="Save listing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-9.5-9C1 8.5 3 5 6.5 5c2 0 3.4 1.1 4 2.2C11.1 6.1 12.5 5 14.5 5 18 5 20 8.5 21.5 12 19 16.4 12 21 12 21z" stroke="#4A342A" stroke-width="1.6"/></svg></button>
+        </div>
+        <div class="listing-body">
+          <div class="listing-top">
+            <span class="listing-name">The Birch Nook</span>
+            <span class="listing-rent">£870<small>/mo</small></span>
+          </div>
+          <p class="listing-loc">Stockbridge, Edinburgh · 18 min walk to campus</p>
+          <div class="listing-tags">
+            <span class="tag-pill">Furnished</span>
+            <span class="tag-pill">Bright</span>
+            <span class="tag-pill">Near River</span>
+          </div>
+          <div class="listing-foot">
+            <div class="host-mini"><span class="host-avatar" style="background:var(--sage-deep);">E</span> Hosted by Elin</div>
+            <span style="font-size:0.75rem;color:var(--sage-deep);font-weight:600;">Available now</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card" data-room="sundial">
+        <div class="listing-photo">
+          <div class="ph" style="background-image:url('sundial-main.jpg');"></div>
+          <span class="listing-tag">Studio</span>
+          <button class="fav-btn" aria-label="Save listing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-9.5-9C1 8.5 3 5 6.5 5c2 0 3.4 1.1 4 2.2C11.1 6.1 12.5 5 14.5 5 18 5 20 8.5 21.5 12 19 16.4 12 21 12 21z" stroke="#4A342A" stroke-width="1.6"/></svg></button>
+        </div>
+        <div class="listing-body">
+          <div class="listing-top">
+            <span class="listing-name">Sundial Studio</span>
+            <span class="listing-rent">£980<small>/mo</small></span>
+          </div>
+          <p class="listing-loc">Leith, Edinburgh · 20 min by tram to campus</p>
+          <div class="listing-tags">
+            <span class="tag-pill">Private Bathroom</span>
+            <span class="tag-pill">Own Kitchenette</span>
+            <span class="tag-pill">Tram Access</span>
+          </div>
+          <div class="listing-foot">
+            <div class="host-mini"><span class="host-avatar" style="background:var(--terracotta-deep);">C</span> Hosted by Callum</div>
+            <span style="font-size:0.75rem;color:var(--sage-deep);font-weight:600;">Available now</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="beam-divider"><svg viewBox="0 0 1200 34" preserveAspectRatio="none"><line x1="0" y1="17" x2="1200" y2="17" stroke="#D8E3ED" stroke-width="2"/><g stroke="#5B7FA6" stroke-width="2.4"><line x1="150" y1="7" x2="150" y2="27"/><line x1="400" y1="7" x2="400" y2="27"/><line x1="650" y1="7" x2="650" y2="27"/><line x1="900" y1="7" x2="900" y2="27"/><line x1="1120" y1="7" x2="1120" y2="27"/></g></svg></div>
+
+<!-- ============ WHY CHOOSE ============ -->
+<section id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Why Block &amp; Beam</p>
+        <h2>Built by people who once moved to a new city with two suitcases</h2>
+      </div>
+      <p>Less like a property portal, more like a friend who already knows the neighbourhood.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7l8-4z" stroke="#2F4B6E" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+        <h3>Verified hosts</h3>
+        <p>Every host completes identity verification before their room ever gets listed.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 016.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" stroke="#5B7FA6" stroke-width="1.8"/></svg></div>
+        <h3>Student friendly</h3>
+        <p>Built with exchange programmes and short academic terms in mind, not year-long corporate leases.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#4A342A" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="#4A342A" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <h3>Transparent pricing</h3>
+        <p>The number you see is the number you pay. No surprise admin fees at checkout.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 01-8.5 8.5 8.5 8.5 0 01-4-1L3 20l1-4.5a8.38 8.38 0 01-1-4A8.5 8.5 0 0111.5 3 8.38 8.38 0 0121 11.5z" stroke="#2F4B6E" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+        <h3>Secure messaging</h3>
+        <p>Talk with your host, share documents, and confirm details before you ever hand over a deposit.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#5B7FA6" stroke-width="1.8"/><path d="M3 10h18M8 2v4M16 2v4" stroke="#5B7FA6" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <h3>Flexible stays</h3>
+        <p>Book for a few weeks or a full academic year — the terms adjust to your calendar, not ours.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21c4-4.5 7-8 7-11.5A7 7 0 005 9.5C5 13 8 16.5 12 21z" stroke="#4A342A" stroke-width="1.8"/><circle cx="12" cy="9.5" r="2.4" stroke="#4A342A" stroke-width="1.8"/></svg></div>
+        <h3>Local community</h3>
+        <p>Every listing comes with the nearest cafés, groceries and transport links, mapped out for you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="beam-divider"><svg viewBox="0 0 1200 34" preserveAspectRatio="none"><line x1="0" y1="17" x2="1200" y2="17" stroke="#D8E3ED" stroke-width="2"/><g stroke="#2F4B6E" stroke-width="2.4"><line x1="60" y1="7" x2="60" y2="27"/><line x1="260" y1="7" x2="260" y2="27"/><line x1="460" y1="7" x2="460" y2="27"/><line x1="660" y1="7" x2="660" y2="27"/><line x1="860" y1="7" x2="860" y2="27"/><line x1="1060" y1="7" x2="1060" y2="27"/></g></svg></div>
+
+<div class="beam-divider"><svg viewBox="0 0 1200 34" preserveAspectRatio="none"><line x1="0" y1="17" x2="1200" y2="17" stroke="#D8E3ED" stroke-width="2"/><g stroke="#5B7FA6" stroke-width="2.4"><line x1="150" y1="7" x2="150" y2="27"/><line x1="400" y1="7" x2="400" y2="27"/><line x1="650" y1="7" x2="650" y2="27"/><line x1="900" y1="7" x2="900" y2="27"/><line x1="1120" y1="7" x2="1120" y2="27"/></g></svg></div>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section id="testimonials">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">The guest book</p>
+        <h2>A few words from people who've stayed</h2>
+      </div>
+    </div>
+    <div class="testi-track">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"My host had tea waiting the day I moved in. Six months later it still feels like the softest landing I could've asked for."</p>
+        <div class="testi-person">
+          <span class="host-avatar">R</span>
+          <div class="testi-meta"><strong>Rania</strong>Exchange student, University of Edinburgh</div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"I moved here for my Master's not knowing a single soul in the city. The neighbourhood guide alone saved me weeks of guessing."</p>
+        <div class="testi-person">
+          <span class="host-avatar">D</span>
+          <div class="testi-meta"><strong>Dara</strong>Master's student, Erasmus programme</div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Messaging the host before booking made all the difference — I knew exactly what I was walking into on day one."</p>
+        <div class="testi-person">
+          <span class="host-avatar">T</span>
+          <div class="testi-meta"><strong>Teo</strong>Summer intern, six-week stay</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MESSAGE SECTION ============ -->
+<section class="message-section" id="message">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Message me</p>
+        <h2>Every good stay starts with a conversation</h2>
+      </div>
+      <p>No forms, no ticket numbers — just a chat with the person who'll actually hand you the keys.</p>
+    </div>
+
+    <div class="msg-shell">
+      <!-- sidebar -->
+      <div class="msg-side">
+        <div class="msg-side-head">Conversations</div>
+        <div class="convo active" data-convo="nora">
+          <span class="host-avatar" id="convoAvatar-nora">N</span>
+          <div>
+            <div class="convo-name">Nora · The Ivy Room</div>
+            <div class="convo-preview" id="convoPreview-nora">No messages yet</div>
+          </div>
+        </div>
+        <div class="convo" data-convo="khal">
+          <span class="host-avatar" id="convoAvatar-khal" style="background:var(--terracotta);">K</span>
+          <div>
+            <div class="convo-name">Khal · The Strange Room</div>
+            <div class="convo-preview" id="convoPreview-khal">No messages yet</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- main chat -->
+      <div class="msg-main">
+        <div class="msg-main-head">
+          <span class="host-avatar" id="chatHeadAvatar">N</span>
+          <div style="flex:1;">
+            <div class="msg-main-head-name" id="chatHeadName">Nora
+              <svg class="verified-dot" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#5B7FA6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="msg-main-head-sub" id="chatHeadSub">The Ivy Room · usually replies within an hour</div>
+          </div>
+          <button class="chat-reset-btn" id="resetConvoBtn" type="button" aria-label="Reset conversation" title="Reset">R</button>
+        </div>
+
+        <div class="chat-area" id="chatArea"></div>
+
+        <div class="add-message-form">
+          <div class="amf-options" id="amfOptions">
+            <div class="amf-meta">
+              <input type="text" id="amfSender" class="amf-name-input" placeholder="Name (opt.)">
+              <div class="side-toggle" id="sideToggle">
+                <button type="button" class="active" data-side="in">L</button>
+                <button type="button" data-side="out">R</button>
+              </div>
+              <input type="date" id="amfDate" class="amf-mini">
+              <input type="time" id="amfTime" class="amf-mini">
+            </div>
+            <button type="button" class="amf-send-btn" id="amfSendBtn">Send</button>
+          </div>
+          <div class="amf-row">
+            <textarea id="amfText" class="amf-textarea" placeholder="Say hello to Nora…" rows="1"></textarea>
+            <button class="amf-add-btn" id="amfAddBtn" aria-label="Add message" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l16-8-6 16-3-6-7-2z" fill="white"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- info panel -->
+      <div class="msg-info">
+        <h4>Listing summary</h4>
+        <div class="info-row info-row-editable" data-field="rent"><span>Monthly rent</span><span class="iv-display"></span></div>
+        <div class="info-row info-row-editable" data-field="moveIn"><span>Move-in</span><span class="iv-display"></span></div>
+        <div class="info-row info-row-editable" data-field="moveOut"><span>Move-out</span><span class="iv-display"></span></div>
+        <div class="info-row info-row-editable" data-field="lease"><span>Lease length</span><span class="iv-display"></span></div>
+        <div class="info-row info-row-editable" data-field="status"><span>Status</span><span class="iv-display"></span></div>
+        <div class="info-row info-row-editable" data-field="deposit" style="border-bottom:none;"><span>Deposit</span><span class="iv-display"></span></div>
+
+        <div class="quick-actions">
+          <button class="qa-btn" id="qaViewListing">🏠 View listing</button>
+          <button class="qa-btn" id="qaAgreement">📄 Download agreement</button>
+          <button class="qa-btn" id="qaPayments">💳 Payment history</button>
+          <button class="qa-btn qa-disabled" id="qaReport" type="button">⚠️ Report an issue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap foot-grid">
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 40 40" fill="none">
+        <rect x="2" y="18" width="36" height="20" rx="6" fill="#5B7FA6"/>
+        <path d="M4 19L20 5L36 19" stroke="#4A342A" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <rect x="17" y="26" width="6" height="12" rx="1.5" fill="#EEF6FC"/>
+      </svg>
+      <span class="logo-text">Block<span>&amp;</span>Beam</span>
+    </div>
+    <ul class="foot-links">
+      <li><a href="#listings">Explore</a></li>
+      <li><a href="#why">Become a host</a></li>
+      <li><a href="#testimonials">Help centre</a></li>
+      <li><a href="#message">Message us</a></li>
+    </ul>
+  </div>
+  <p class="foot-note wrap">Block &amp; Beam — a mockup room-rental concept. Built for a design exercise, not a real booking platform.</p>
+</footer>
+
+<!-- ============ PROFILE MODAL ============ -->
+<div class="side-modal-overlay" id="profileOverlay">
+  <div class="side-modal-box" style="max-width:380px;">
+    <div class="side-modal-head">
+      <h3>Your profile</h3>
+      <button class="side-modal-close" id="profileClose" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#4A342A" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="profile-edit">
+      <button type="button" class="profile-avatar profile-avatar-lg" id="profilePreview" aria-label="Choose photo"></button>
+      <input type="file" id="profileFile" accept="image/*" hidden>
+      <div class="profile-photo-actions">
+        <button type="button" class="profile-link-btn" id="profileUpload">Upload photo</button>
+        <button type="button" class="profile-link-btn" id="profileRemovePhoto">Remove photo</button>
+      </div>
+      <input type="text" id="profileName" class="profile-name-input" placeholder="Your name" maxlength="30">
+      <button type="button" class="payment-add-full-btn" id="profileSave" style="width:100%;">Save</button>
+      <button type="button" class="profile-link-btn" id="profileSignOut" style="margin-top:4px;">Back to “Sign In”</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ AGREEMENT PREVIEW MODAL ============ -->
+<div class="side-modal-overlay" id="agreementOverlay">
+  <div class="side-modal-box">
+    <div class="side-modal-head">
+      <h3>Agreement preview</h3>
+      <button class="side-modal-close" id="agreementClose" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#4A342A" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="agreement-doc" id="agreementDoc"></div>
+    <button class="payment-add-full-btn" id="agreementDownloadBtn">Download as .txt</button>
+    <p style="font-size:0.72rem;color:var(--walnut-soft);margin-top:10px;text-align:center;">Mock preview for design purposes — not a real tenancy agreement.</p>
+  </div>
+</div>
+
+<!-- ============ PAYMENT HISTORY MODAL ============ -->
+<div class="side-modal-overlay" id="paymentOverlay">
+  <div class="side-modal-box">
+    <div class="side-modal-head">
+      <h3>Payment history</h3>
+      <button class="side-modal-close" id="paymentClose" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#4A342A" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="payment-list" id="paymentList"></div>
+    <div class="payment-gen">
+      <div class="payment-gen-head">
+        <button type="button" class="profile-link-btn" id="pgToggle">Generate schedule</button>
+        <button type="button" class="profile-link-btn" id="pgClear">Clear all</button>
+      </div>
+      <div class="payment-gen-box" id="pgBox">
+        <div class="payment-form-row">
+          <input type="date" id="pgDate">
+          <input type="number" id="pgMonths" min="1" max="36" placeholder="Months">
+        </div>
+        <input type="text" id="pgAmount" placeholder="Amount (e.g. £750)">
+        <button type="button" class="payment-add-full-btn" id="pgGenerate">Generate</button>
+      </div>
+    </div>
+    <div class="payment-form">
+      <div class="payment-form-row">
+        <input type="date" id="pfDate">
+        <input type="text" id="pfAmount" placeholder="Amount (e.g. £850)">
+      </div>
+      <textarea id="pfNote" placeholder="Note (e.g. First month's rent)" rows="1"></textarea>
+      <button class="payment-add-full-btn" id="pfAddBtn">Add payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ROOM DETAIL MODAL ============ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose" aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#4A342A" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="modal-gallery">
+      <div class="ph" id="modalMainPhoto" style="background:linear-gradient(150deg,#D4E6F5,#5B7FA6);"></div>
+      <div class="g-side">
+        <div class="ph" id="modalSide1" style="background:linear-gradient(150deg,#DCEBF7,#2F4B6E);"></div>
+        <div class="ph" id="modalSide2" style="background:linear-gradient(150deg,#D8E3ED,#4A342A);"></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <h3 id="modalTitle">The Ivy Room</h3>
+      <p class="modal-loc" id="modalLoc">Marchmont, Edinburgh · 6 min walk to campus</p>
+
+      <div class="modal-facts">
+        <div class="modal-fact"><div class="fk">Rent</div><div class="fv" id="modalRent">£850 / mo</div></div>
+        <div class="modal-fact"><div class="fk">Room size</div><div class="fv" id="modalSize">12 m²</div></div>
+        <div class="modal-fact"><div class="fk">Lease</div><div class="fv" id="modalLease">10 months</div></div>
+        <div class="modal-fact"><div class="fk">Deposit</div><div class="fv" id="modalDeposit">£650</div></div>
+        <div class="modal-fact"><div class="fk">Available</div><div class="fv" id="modalAvail">Now</div></div>
+      </div>
+
+      <p class="modal-desc" id="modalDesc">A bright single room on the second floor of a converted Georgian townhouse, five minutes from the tram line.</p>
+
+      <h4 style="font-size:0.95rem;margin-bottom:12px;">Amenities</h4>
+      <div class="amenity-grid" id="modalAmenities"></div>
+
+      <h4 style="font-size:0.95rem;margin-bottom:12px;">House rules</h4>
+      <div class="rules-list" id="modalRules"></div>
+
+      <div id="modalBuildingWrap" style="display:none;">
+        <h4 style="font-size:0.95rem;margin-bottom:12px;">Building</h4>
+        <div class="rules-list" id="modalBuilding"></div>
+      </div>
+
+      <h4 style="font-size:0.95rem;margin-bottom:12px;">About the host</h4>
+      <div class="host-box">
+        <div class="host-box-left">
+          <span class="host-avatar" style="width:48px;height:48px;font-size:1rem;" id="modalHostInitial">N</span>
+          <div>
+            <div class="host-box-name" id="modalHostName">Nora <svg class="verified-dot" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#5B7FA6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="host-box-sub" id="modalHostSub">Joined 2024 · Usually replies within an hour · Speaks English, Norwegian</div>
+          </div>
+        </div>
+        <a href="#message" class="btn btn-outline" id="modalMessageBtn">Message host</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---- room detail modal data ----
+  const rooms = {
+    ivy: {
+      title:"The Ivy Room", loc:"Marchmont, Edinburgh · 6 min walk to campus", rent:"£850 / mo",
+      size:"12 m²", lease:"10 months", deposit:"£650", avail:"Now",
+      desc:"A bright single room on the second floor of a converted Georgian townhouse, five minutes from the tram line. Mornings get soft east light through the bay window; evenings are quiet enough to hear the kettle from the next room over.",
+      grad:"linear-gradient(150deg,#D4E6F5,#5B7FA6)", photo:"ivy-main.jpg",
+      amenities:["🛏️ Furnished bedroom","🚿 Shared bathroom","🍳 Full kitchen access","🧺 Washing machine","📶 Fibre Wi‑Fi","🔥 Central heating","📦 Storage space","🪑 Study desk","🔒 Keyed entry"],
+      rules:["No smoking indoors","Please clean shared spaces after use","Quiet hours after 10 PM","Overnight guests welcome with prior notice","Respect shared facilities"],
+      hostInitial:"N", host:"Nora", hostSub:"Joined 2024 · Usually replies within an hour · Speaks English, Norwegian"
+    },
+    cherry: {
+      title:"Cherry Blossom Suite", loc:"Southside, Edinburgh · 12 min walk to campus", rent:"£920 / mo",
+      size:"14 m²", lease:"9 months", deposit:"£700", avail:"1 Sept 2026",
+      desc:"A corner suite with its own small balcony overlooking a row of cherry trees that go pink every April. The room comes with a private bathroom and enough desk space for two monitors.",
+      grad:"linear-gradient(150deg,#E3EEF9,#2F4B6E)", photo:"cherry-main.jpg",
+      amenities:["🛏️ Furnished bedroom","🚿 Private bathroom","🍳 Full kitchen access","🧺 Washing machine","📶 Fibre Wi‑Fi","🔥 Central heating","🌤 Private balcony","🪑 Double desk","🔒 Keyed entry"],
+      rules:["No smoking indoors","Please clean shared spaces after use","Quiet hours after 10 PM","Overnight guests with prior notice","Respect shared facilities"],
+      hostInitial:"A", host:"Aiko", hostSub:"Joined 2023 · Usually replies within two hours · Speaks English, Japanese"
+    },
+    walnut: {
+      title:"The Walnut Loft", loc:"Newington, Edinburgh · 4 min walk to campus", rent:"£810 / mo",
+      size:"11 m²", lease:"12 months", deposit:"£620", avail:"Now",
+      desc:"A snug attic room with sloped ceilings and a window seat that's become the unofficial reading corner of the flat. Closest to campus of all our Edinburgh listings.",
+      grad:"linear-gradient(150deg,#D8E3ED,#4A342A)", photo:"walnut-main.jpg",
+      amenities:["🛏️ Furnished bedroom","🚿 Shared bathroom","🍳 Full kitchen access","🧺 Washing machine","📶 Fibre Wi‑Fi","🔥 Central heating","🪟 Window seat","🪑 Study desk","🔒 Keyed entry"],
+      rules:["No smoking indoors","Please clean shared spaces after use","Quiet hours after 10 PM","Overnight guests with prior notice","Respect shared facilities"],
+      hostInitial:"M", host:"Mateo", hostSub:"Joined 2022 · Usually replies within thirty minutes · Speaks English, Spanish"
+    },
+    khal: {
+      title:"The Strange Room", loc:"17 Marchmont Crescent, Edinburgh · 15 min walk to campus", rent:"£750 / mo",
+      size:"12 m²", lease:"6–12 months", deposit:"One month's rent", avail:"Move-in immediately",
+      desc:"A furnished private single room in a quiet two-bedroom flat on the fourth floor of a residential building in Marchmont. The flat includes two private bedrooms, a shared living room and kitchen, a bathroom with a separate laundry area, and a small rear-facing balcony overlooking the shared back green and surrounding tenements.",
+      grad:"linear-gradient(150deg,#DCEBF7,#2F4B6E)", photo:"khal-main.jpg", gallery:["khal-2.jpg","khal-3.jpg"],
+      amenities:["🛏 Single bed","🪑 Study desk","🪞 Full-length mirror","👕 Large wardrobe","📚 Bookshelf","🪟 Large window","📶 High-speed Wi‑Fi","🧳 Under-bed storage","🛋 Shared living room","🍳 Fully equipped kitchen","🛁 Bathroom","🧺 Separate laundry area","🌿 Rear-facing balcony","🔐 Smart access / keypad","📞 Intercom","🌳 Shared back green"],
+      rules:["No smoking indoors","Please clean shared spaces after use","Quiet hours begin at 10:00 PM","Overnight guests require prior notice","Please respect each other's privacy and belongings"],
+      building:["Flat 4B · Fourth floor","5 storeys · 10 residential flats · 2 flats per floor","1 main entrance · Small entrance lobby · Mailboxes","Secure entry with intercom, keypad access and CCTV at the entrance","Central staircase · No lift","Shared back green"],
+      hostInitial:"K", host:"Khal", hostSub:"Joined 2025 · Usually replies within 15 minutes · Speaks English"
+    },
+    birch: {
+      title:"The Birch Nook", loc:"Stockbridge, Edinburgh · 18 min walk to campus", rent:"£870 / mo",
+      size:"13 m²", lease:"9–12 months", deposit:"£680", avail:"Now",
+      desc:"A calm, light-filled room in a two-bedroom flat close to the Water of Leith. Pale wood floors, a lot of plants, and a flatmate who mostly keeps to herself during the week. Stockbridge's Sunday market and the walking path along the river are both a few minutes away.",
+      grad:"linear-gradient(150deg,#DCEBF7,#5B7FA6)", photo:"birch-main.jpg",
+      amenities:["🛏️ Furnished bedroom","🚿 Shared bathroom","🍳 Full kitchen access","🧺 Washing machine","📶 Fibre Wi‑Fi","🔥 Central heating","🪴 Plant-filled common areas","🪑 Study desk","🔒 Keyed entry"],
+      rules:["No smoking indoors","Please clean shared spaces after use","Quiet hours after 10 PM","Overnight guests with prior notice","Respect shared facilities"],
+      hostInitial:"E", host:"Elin", hostSub:"Joined 2024 · Usually replies within a few hours · Speaks English, Swedish"
+    },
+    sundial: {
+      title:"Sundial Studio", loc:"Leith, Edinburgh · 20 min by tram to campus", rent:"£980 / mo",
+      size:"22 m²", lease:"6–12 months", deposit:"£750", avail:"1 Sept 2026",
+      desc:"A fully self-contained studio above a converted warehouse near Leith's waterfront, with its own kitchenette and bathroom — no shared spaces at all. Best for anyone who wants full privacy and doesn't mind a slightly longer tram ride to campus in exchange for it.",
+      grad:"linear-gradient(150deg,#D8E3ED,#22394F)", photo:"sundial-main.jpg",
+      amenities:["🛏️ Furnished studio","🚿 Private bathroom","🍳 Private kitchenette","🧺 Washing machine","📶 Fibre Wi‑Fi","🔥 Central heating","🛋 Living area","🪑 Study desk","🔒 Private entrance"],
+      rules:["No smoking indoors","Quiet hours after 10 PM","Overnight guests with prior notice","Respect the building's communal entrance"],
+      hostInitial:"C", host:"Callum", hostSub:"Joined 2023 · Usually replies within 30 minutes · Speaks English"
+    }
+  };
+
+  const overlay = document.getElementById('modalOverlay');
+
+  function openRoomModal(roomKey){
+    const r = rooms[roomKey];
+    if(!r) return;
+    document.getElementById('modalTitle').textContent = r.title;
+    document.getElementById('modalLoc').textContent = r.loc;
+    document.getElementById('modalRent').textContent = r.rent;
+    document.getElementById('modalSize').textContent = r.size;
+    document.getElementById('modalLease').textContent = r.lease;
+    document.getElementById('modalDeposit').textContent = r.deposit;
+    document.getElementById('modalAvail').textContent = r.avail;
+    document.getElementById('modalDesc').textContent = r.desc;
+    document.getElementById('modalMainPhoto').style.background = r.photo ? `url('${r.photo}') center/cover` : r.grad;
+
+    const side1 = document.getElementById('modalSide1');
+    const side2 = document.getElementById('modalSide2');
+    if(r.gallery && r.gallery[0]){ side1.style.background = `url('${r.gallery[0]}') center/cover`; }
+    else { side1.style.background = r.grad; }
+    if(r.gallery && r.gallery[1]){ side2.style.background = `url('${r.gallery[1]}') center/cover`; }
+    else { side2.style.background = r.grad; }
+
+    const amenityBox = document.getElementById('modalAmenities');
+    amenityBox.innerHTML = r.amenities.map(a=>`<div class="amenity-item">${a}</div>`).join('');
+
+    const rulesBox = document.getElementById('modalRules');
+    rulesBox.innerHTML = r.rules.map(rule=>`<div>· ${rule}</div>`).join('');
+
+    const buildingWrap = document.getElementById('modalBuildingWrap');
+    if(r.building && r.building.length){
+      document.getElementById('modalBuilding').innerHTML = r.building.map(b=>`<div>${b}</div>`).join('');
+      buildingWrap.style.display = 'block';
+    } else {
+      buildingWrap.style.display = 'none';
+    }
+
+    document.getElementById('modalHostInitial').textContent = r.hostInitial;
+    document.getElementById('modalHostName').innerHTML = r.host + ' <svg class="verified-dot" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#5B7FA6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    document.getElementById('modalHostSub').textContent = r.hostSub;
+
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+
+  document.querySelectorAll('.listing-card').forEach(card=>{
+    card.addEventListener('click', ()=> openRoomModal(card.dataset.room));
+  });
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) closeModal(); });
+  function closeModal(){ overlay.classList.remove('open'); document.body.style.overflow=''; }
+  document.getElementById('modalMessageBtn').addEventListener('click', closeModal);
+
+  // ---- quick filter chip toggle ----
+  document.querySelectorAll('.qf-chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      document.querySelectorAll('.qf-chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+
+  // ==================== iMESSAGE-STYLE EDITABLE CHAT (localStorage) ====================
+  const STORAGE_PREFIX = 'bnb_chat_';
+
+  // Chats start empty — add your own messages with the form below the chat.
+  const defaultConvos = {
+    nora: {
+      name:"Nora", sub:"The Ivy Room · usually replies within an hour", avatarInitial:"N", avatarBg:"var(--sage)",
+      messages:[]
+    },
+    khal: {
+      name:"Khal", sub:"The Strange Room · usually replies within 15 minutes", avatarInitial:"K", avatarBg:"var(--terracotta)",
+      messages:[]
+    }
+  };
+
+  let currentConvoId = 'nora';
+  let editingMsgId = null;
+
+  function loadConvo(id){
+    try{
+      const raw = localStorage.getItem(STORAGE_PREFIX + id);
+      if(raw) return JSON.parse(raw);
+    }catch(e){ console.warn('Could not read saved chat, using default.', e); }
+    return JSON.parse(JSON.stringify(defaultConvos[id].messages));
+  }
+  function saveConvo(id, messages){
+    try{ localStorage.setItem(STORAGE_PREFIX + id, JSON.stringify(messages)); }
+    catch(e){ console.warn('Could not save chat.', e); }
+  }
+
+  // ---- delivered / read / sent status (click to cycle) ----
+  const STATUS_PREFIX = 'bnb_status_';
+  const STATUS_CYCLE = ['Delivered','Read','Sent'];
+  function getStatus(id){
+    try{ return localStorage.getItem(STATUS_PREFIX + id) || 'Delivered'; }catch(e){ return 'Delivered'; }
+  }
+  function setStatus(id, v){
+    try{ localStorage.setItem(STATUS_PREFIX + id, v); }catch(e){}
+  }
+
+  // ---- date label (Today / Yesterday / weekday) ----
+  function dateLabel(d){
+    if(!d) return '';
+    const today = new Date(); today.setHours(0,0,0,0);
+    const that = new Date(d + 'T00:00:00');
+    const diff = Math.round((today - that) / 86400000);
+    if(diff === 0) return 'Today';
+    if(diff === 1) return 'Yesterday';
+    return that.toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'short'});
+  }
+
+  const chatArea = document.getElementById('chatArea');
+  function scrollChat(){ chatArea.scrollTop = chatArea.scrollHeight; }
+
+  function renderChat(){
+    const messages = loadConvo(currentConvoId);
+    chatArea.innerHTML = '';
+    if(messages.length === 0){
+      chatArea.innerHTML = '<div class="chat-empty">No messages yet — add the first one below.</div>';
+      return;
+    }
+    messages.forEach((msg, i)=>{
+      const prev = messages[i-1], next = messages[i+1];
+      const first = !prev || prev.side !== msg.side || (msg.date && prev.date !== msg.date);
+      const last  = !next || next.side !== msg.side || (msg.date && next.date !== msg.date);
+
+      // date separator (centered, like iMessage)
+      if(msg.date && (!prev || prev.date !== msg.date)){
+        const sep = document.createElement('div');
+        sep.className = 'date-sep';
+        sep.innerHTML = `<strong>${escapeHtml(dateLabel(msg.date))}</strong> ${escapeHtml(msg.time || '')}`;
+        chatArea.appendChild(sep);
+      }
+
+      const wrap = document.createElement('div');
+      wrap.className = 'bubble-wrap side-' + msg.side + (first?' first':'') + (last?' last':'');
+
+      if(editingMsgId === msg.id){
+        wrap.innerHTML = `
+          <div class="bubble-sender">${escapeHtml(msg.sender)}</div>
+          <div class="bubble-edit-box">
+            <textarea>${escapeHtml(msg.text)}</textarea>
+            <div class="bubble-edit-meta">
+              <input type="date" class="ed-date" value="${escapeHtml(msg.date || '')}">
+              <input type="time" class="ed-time" value="${escapeHtml(msg.time || '')}">
+            </div>
+            <div class="bubble-edit-actions">
+              <button class="bubble-cancel-btn" type="button">Cancel</button>
+              <button class="bubble-save-btn" type="button">Save</button>
+            </div>
+          </div>`;
+        const textarea = wrap.querySelector('textarea');
+        wrap.querySelector('.bubble-save-btn').addEventListener('click', ()=>{
+          const newText = textarea.value.trim();
+          const d = wrap.querySelector('.ed-date').value;
+          const t = wrap.querySelector('.ed-time').value;
+          if(newText){
+            const all = loadConvo(currentConvoId);
+            const target = all.find(m=>m.id===msg.id);
+            if(target){ target.text = newText; if(d) target.date = d; if(t) target.time = t; }
+            saveConvo(currentConvoId, all);
+          }
+          editingMsgId = null;
+          renderChat();
+          updateSidebarPreview(currentConvoId);
+        });
+        wrap.querySelector('.bubble-cancel-btn').addEventListener('click', ()=>{
+          editingMsgId = null;
+          renderChat();
+        });
+      } else {
+        wrap.innerHTML = `
+          <div class="bubble-actions">
+            <button class="bubble-action-btn" data-action="edit" aria-label="Edit message">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 20h9" stroke="#4A342A" stroke-width="1.8" stroke-linecap="round"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" stroke="#4A342A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="bubble-action-btn" data-action="delete" aria-label="Delete message">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#22394F" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+          <div class="bubble-sender">${escapeHtml(msg.sender)}</div>
+          <div class="bubble">${escapeHtml(msg.text)}<span class="bubble-time">${escapeHtml(msg.time || '')}</span></div>`;
+        wrap.querySelector('[data-action="edit"]').addEventListener('click', ()=>{
+          editingMsgId = msg.id;
+          renderChat();
+        });
+        wrap.querySelector('[data-action="delete"]').addEventListener('click', ()=>{
+          const all = loadConvo(currentConvoId).filter(m=>m.id!==msg.id);
+          saveConvo(currentConvoId, all);
+          renderChat();
+          updateSidebarPreview(currentConvoId);
+        });
+      }
+      chatArea.appendChild(wrap);
+
+      // "Delivered" under the last outgoing message (click to change)
+      if(i === messages.length - 1 && msg.side === 'out'){
+        const st = document.createElement('div');
+        st.className = 'delivered';
+        st.textContent = getStatus(currentConvoId);
+        st.addEventListener('click', ()=>{
+          const nextStatus = STATUS_CYCLE[(STATUS_CYCLE.indexOf(getStatus(currentConvoId)) + 1) % STATUS_CYCLE.length];
+          setStatus(currentConvoId, nextStatus);
+          renderChat();
+        });
+        chatArea.appendChild(st);
+      }
+    });
+    scrollChat();
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+
+  function updateSidebarPreview(id){
+    const messages = loadConvo(id);
+    const last = messages[messages.length - 1];
+    const previewEl = document.getElementById('convoPreview-' + id);
+    if(previewEl) previewEl.textContent = last ? last.text : 'No messages yet';
+  }
+
+  function switchConvo(id){
+    currentConvoId = id;
+    editingMsgId = null;
+    const data = defaultConvos[id];
+    document.getElementById('chatHeadName').innerHTML = data.name + ' <svg class="verified-dot" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#5B7FA6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    document.getElementById('chatHeadSub').textContent = data.sub;
+    document.getElementById('chatHeadAvatar').textContent = data.avatarInitial;
+    document.getElementById('chatHeadAvatar').style.background = data.avatarBg;
+    document.getElementById('amfSender').value = '';
+    document.getElementById('amfText').placeholder = 'Say hello to ' + data.name + '…';
+    document.getElementById('amfOptions').classList.remove('open');
+    renderChat();
+    renderSummary();
+  }
+
+  document.querySelectorAll('.convo').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      document.querySelectorAll('.convo').forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+      switchConvo(c.dataset.convo);
+    });
+  });
+
+  // ---- reset conversation ----
+  document.getElementById('resetConvoBtn').addEventListener('click', ()=>{
+    const ok = confirm('Reset this conversation back to empty? This can\'t be undone.');
+    if(!ok) return;
+    try{
+      localStorage.removeItem(STORAGE_PREFIX + currentConvoId);
+      localStorage.removeItem(STATUS_PREFIX + currentConvoId);
+    }catch(e){}
+    editingMsgId = null;
+    renderChat();
+    updateSidebarPreview(currentConvoId);
+  });
+
+  // ---- add message form ----
+  const sideToggle = document.getElementById('sideToggle');
+  let selectedSide = 'in';
+  sideToggle.querySelectorAll('button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      sideToggle.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedSide = btn.dataset.side;
+    });
+  });
+
+  const amfSender = document.getElementById('amfSender');
+  const amfText = document.getElementById('amfText');
+  const amfAddBtn = document.getElementById('amfAddBtn');
+  const amfDate = document.getElementById('amfDate');
+  const amfTime = document.getElementById('amfTime');
+
+  // default date & time = now (editable)
+  (function setNow(){
+    const n = new Date();
+    amfDate.value = n.toLocaleDateString('en-CA');
+    amfTime.value = n.toTimeString().slice(0,5);
+  })();
+
+  function refreshAddBtnState(){
+    amfAddBtn.disabled = !amfText.value.trim();
+  }
+  amfSender.addEventListener('input', refreshAddBtnState);
+  amfText.addEventListener('input', refreshAddBtnState);
+  amfText.addEventListener('input', ()=>{
+    amfText.style.height = 'auto';
+    amfText.style.height = Math.min(amfText.scrollHeight, 110) + 'px';
+  });
+
+  function addMessage(){
+    const sender = amfSender.value.trim() || 'You';
+    const text = amfText.value.trim();
+    if(!text) return;
+    const all = loadConvo(currentConvoId);
+    const date = amfDate.value || new Date().toLocaleDateString('en-CA');
+    const time = amfTime.value || new Date().toTimeString().slice(0,5);
+    all.push({ id: Date.now(), sender, side: selectedSide, text, time, date });
+    saveConvo(currentConvoId, all);
+    amfText.value = '';
+    amfText.style.height = 'auto';
+    refreshAddBtnState();
+    amfOptions.classList.remove('open');
+    renderChat();
+    updateSidebarPreview(currentConvoId);
+  }
+
+  // Step 1: tap the send button (or Enter) -> options panel + Send appear.
+  // Step 2: tap Send in the panel (or Enter again) -> message is sent, panel hides.
+  // Side, date and time are remembered for the next message.
+  const amfOptions = document.getElementById('amfOptions');
+  const amfSendBtn = document.getElementById('amfSendBtn');
+  function openOptionsOrSend(){
+    if(!amfText.value.trim()) return;
+    if(amfOptions.classList.contains('open')){ addMessage(); }
+    else { amfOptions.classList.add('open'); scrollChat(); }
+  }
+  amfAddBtn.addEventListener('click', openOptionsOrSend);
+  amfSendBtn.addEventListener('click', addMessage);
+  amfText.addEventListener('keydown', e=>{
+    if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); openOptionsOrSend(); }
+  });
+
+  // ==================== EDITABLE LISTING SUMMARY ====================
+  const SUMMARY_PREFIX = 'bnb_summary_';
+  const convoRoomKey = { nora:'ivy', khal:'khal' };
+
+  const defaultSummaries = {
+    nora: { rent:"£850", moveIn:"1 Sept 2026", moveOut:"30 June 2027", lease:"10 months", status:"Confirmed", deposit:"Held", moveInISO:"2026-09-01", moveOutISO:"2027-06-30", leaseMonths:"10" },
+    khal: { rent:"£750", moveIn:"Immediate", moveOut:"—", lease:"6–12 months", status:"Confirmed", deposit:"One month's rent", moveInISO:"", moveOutISO:"", leaseMonths:"" }
+  };
+
+  // One-time reset of summary + payment defaults when the data version changes (chat & profile are kept)
+  (function migrateData(){
+    try{
+      if(localStorage.getItem('bnb_data_version') !== '2'){
+        ['nora','khal'].forEach(id=>{
+          localStorage.removeItem('bnb_summary_' + id);
+          localStorage.removeItem('bnb_payments_' + id);
+        });
+        localStorage.setItem('bnb_data_version', '2');
+      }
+    }catch(e){}
+  })();
+
+  function loadSummary(id){
+    try{
+      const raw = localStorage.getItem(SUMMARY_PREFIX + id);
+      if(raw) return { ...defaultSummaries[id], ...JSON.parse(raw) };
+    }catch(e){ console.warn('Could not read saved summary, using default.', e); }
+    return { ...defaultSummaries[id] };
+  }
+  function saveSummary(id, summary){
+    try{ localStorage.setItem(SUMMARY_PREFIX + id, JSON.stringify(summary)); }
+    catch(e){ console.warn('Could not save summary.', e); }
+  }
+
+  function renderSummary(){
+    const summary = loadSummary(currentConvoId);
+    document.querySelectorAll('.info-row-editable').forEach(row=>{
+      const field = row.dataset.field;
+      const display = row.querySelector('.iv-display');
+      display.innerHTML = `<span class="iv-value"><strong>${escapeHtml(summary[field])}</strong>
+        <svg class="iv-edit-icon" width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" stroke="#7A6355" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+    });
+  }
+
+  document.querySelectorAll('.info-row-editable').forEach(row=>{
+    row.addEventListener('click', function handler(){
+      if(row.querySelector('input')) return; // already editing
+      const field = row.dataset.field;
+      const summary = loadSummary(currentConvoId);
+      const display = row.querySelector('.iv-display');
+      display.innerHTML = `<input type="text" value="${escapeHtml(summary[field])}">`;
+      const input = display.querySelector('input');
+      input.focus();
+      input.select();
+      function commit(){
+        const s = loadSummary(currentConvoId);
+        s[field] = input.value.trim() || summary[field];
+        if(s[field] !== summary[field]){
+          if(field==='moveIn') s.moveInISO = '';
+          if(field==='moveOut') s.moveOutISO = '';
+          if(field==='lease') s.leaseMonths = '';
+        }
+        saveSummary(currentConvoId, s);
+        renderSummary();
+      }
+      input.addEventListener('blur', commit);
+      input.addEventListener('keydown', e=>{
+        if(e.key === 'Enter'){ e.preventDefault(); input.blur(); }
+        if(e.key === 'Escape'){ renderSummary(); }
+      });
+      input.addEventListener('click', e=>e.stopPropagation());
+    });
+  });
+
+  // ==================== QUICK ACTIONS ====================
+  document.getElementById('qaViewListing').addEventListener('click', ()=>{
+    openRoomModal(convoRoomKey[currentConvoId]);
+  });
+
+  // ---- date helpers ----
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec'];
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function isoOf(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+  function fmtDate(iso){
+    if(!iso) return '';
+    const p = iso.split('-').map(Number);
+    return p[2] + ' ' + MONTHS[p[1]-1] + ' ' + p[0];
+  }
+  function addMonths(iso, n){
+    const [y,m,d] = iso.split('-').map(Number);
+    const t = new Date(y, m-1+n, 1);
+    const last = new Date(t.getFullYear(), t.getMonth()+1, 0).getDate();
+    t.setDate(Math.min(d, last));
+    return isoOf(t);
+  }
+  function addDays(iso, n){
+    const [y,m,d] = iso.split('-').map(Number);
+    return isoOf(new Date(y, m-1, d+n));
+  }
+
+  // ---- agreement preview (editable) ----
+  const agreementOverlay = document.getElementById('agreementOverlay');
+  const agreementDoc = document.getElementById('agreementDoc');
+
+  function renderAgreement(){
+    const s = loadSummary(currentConvoId);
+    const room = rooms[convoRoomKey[currentConvoId]];
+    const host = defaultConvos[currentConvoId].name;
+    agreementDoc.innerHTML = `
+      <div class="ad-title">${escapeHtml(room.title)} — Tenancy Agreement</div>
+      <div class="ad-row"><span>Host</span><strong>${escapeHtml(host)}</strong></div>
+      <div class="ad-row"><span>Monthly rent</span><input class="ad-input" data-k="rent" type="text" value="${escapeHtml(s.rent)}"></div>
+      <div class="ad-row"><span>Move-in</span><input class="ad-input" data-k="moveInISO" type="date" value="${escapeHtml(s.moveInISO || '')}"></div>
+      <div class="ad-row"><span>Lease (months)</span><input class="ad-input" data-k="leaseMonths" type="number" min="1" max="60" value="${escapeHtml(s.leaseMonths || '')}" placeholder="${escapeHtml(s.lease)}"></div>
+      <div class="ad-row"><span>Move-out</span><input class="ad-input" data-k="moveOutISO" type="date" value="${escapeHtml(s.moveOutISO || '')}"></div>
+      <div class="ad-row"><span>Deposit</span><input class="ad-input" data-k="deposit" type="text" value="${escapeHtml(s.deposit)}"></div>
+      <div class="ad-row"><span>Status</span><input class="ad-input" data-k="status" type="text" value="${escapeHtml(s.status)}"></div>
+      <p class="ad-hint">Move-out is calculated from move-in + months, but you can still change it by hand.</p>`;
+    agreementDoc.querySelectorAll('.ad-input').forEach(inp=>{
+      inp.addEventListener('change', ()=> onAgreementEdit(inp));
+    });
+  }
+
+  function onAgreementEdit(inp){
+    const k = inp.dataset.k;
+    const s = loadSummary(currentConvoId);
+    const val = inp.value.trim();
+    if(k === 'rent' || k === 'deposit' || k === 'status'){
+      if(val) s[k] = val; else inp.value = s[k];
+    } else if(k === 'moveInISO'){
+      s.moveInISO = val;
+      if(val) s.moveIn = fmtDate(val);
+    } else if(k === 'leaseMonths'){
+      s.leaseMonths = val;
+      if(val) s.lease = val + (Number(val) === 1 ? ' month' : ' months');
+    } else if(k === 'moveOutISO'){
+      s.moveOutISO = val;
+      if(val) s.moveOut = fmtDate(val);
+    }
+    // auto move-out = move-in + months - 1 day
+    if((k === 'moveInISO' || k === 'leaseMonths') && s.moveInISO && Number(s.leaseMonths) > 0){
+      s.moveOutISO = addDays(addMonths(s.moveInISO, Number(s.leaseMonths)), -1);
+      s.moveOut = fmtDate(s.moveOutISO);
+      const mo = agreementDoc.querySelector('[data-k="moveOutISO"]');
+      if(mo) mo.value = s.moveOutISO;
+    }
+    saveSummary(currentConvoId, s);
+    renderSummary();
+  }
+
+  document.getElementById('qaAgreement').addEventListener('click', ()=>{
+    renderAgreement();
+    agreementOverlay.classList.add('open');
+  });
+  document.getElementById('agreementClose').addEventListener('click', ()=> agreementOverlay.classList.remove('open'));
+  agreementOverlay.addEventListener('click', e=>{ if(e.target===agreementOverlay) agreementOverlay.classList.remove('open'); });
+  document.getElementById('agreementDownloadBtn').addEventListener('click', ()=>{
+    const summary = loadSummary(currentConvoId);
+    const room = rooms[convoRoomKey[currentConvoId]];
+    const host = defaultConvos[currentConvoId].name;
+    const content = `${room.title} — Tenancy Agreement (mock document)\n\nHost: ${host}\nMonthly rent: ${summary.rent}\nMove-in: ${summary.moveIn}\nMove-out: ${summary.moveOut}\nLease length: ${summary.lease}\nDeposit: ${summary.deposit}\nStatus: ${summary.status}\n`;
+    const blob = new Blob([content], {type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `block-and-beam-agreement-${currentConvoId}.txt`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  // ---- payment history (date picker, schedule generator, Paid/Upcoming) ----
+  const PAYMENT_PREFIX = 'bnb_payments_';
+  const defaultPayments = {
+    nora: [
+      { id:1, iso:"2026-08-01", date:"1 Aug 2026", amount:"£850", note:"First month's rent", status:"Paid" }
+    ],
+    khal: [
+      { id:1, iso:"2026-07-20", date:"20 Jul 2026", amount:"£750", note:"Deposit — one month's rent", status:"Paid" }
+    ]
+  };
+  function loadPayments(id){
+    try{
+      const raw = localStorage.getItem(PAYMENT_PREFIX + id);
+      if(raw) return JSON.parse(raw);
+    }catch(e){ console.warn('Could not read saved payments.', e); }
+    return JSON.parse(JSON.stringify(defaultPayments[id] || []));
+  }
+  function savePayments(id, list){
+    try{ localStorage.setItem(PAYMENT_PREFIX + id, JSON.stringify(list)); }
+    catch(e){ console.warn('Could not save payments.', e); }
+  }
+
+  const paymentOverlay = document.getElementById('paymentOverlay');
+  const paymentList = document.getElementById('paymentList');
+  let pfStatus = 'Paid';
+
+  function renderPayments(){
+    const list = loadPayments(currentConvoId).slice().sort((a,b)=> (a.iso || '9999').localeCompare(b.iso || '9999'));
+    paymentList.innerHTML = '';
+    if(list.length === 0){
+      paymentList.innerHTML = '<div class="payment-empty">No payments recorded yet.</div>';
+      return;
+    }
+    list.forEach(p=>{
+      const status = p.status === 'Upcoming' ? 'Upcoming' : 'Paid';
+      const item = document.createElement('div');
+      item.className = 'payment-item';
+      item.innerHTML = `
+        <div class="pi-actions">
+          <button class="bubble-action-btn" data-action="edit" aria-label="Edit payment">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 20h9" stroke="#4A342A" stroke-width="1.8" stroke-linecap="round"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" stroke="#4A342A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="bubble-action-btn" data-action="delete" aria-label="Delete payment">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#22394F" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="pi-top"><span class="pi-amount">${escapeHtml(p.amount)}</span><span class="paid-badge ${status === 'Upcoming' ? 'upcoming' : ''}" data-action="status" title="Tap to change">${status}</span></div>
+        <div class="pi-date">${escapeHtml(p.iso ? fmtDate(p.iso) : p.date)}</div>
+        ${p.note ? `<div class="pi-note">${escapeHtml(p.note)}</div>` : ''}`;
+      item.querySelector('[data-action="status"]').addEventListener('click', ()=>{
+        const all = loadPayments(currentConvoId);
+        const t = all.find(x=>x.id===p.id);
+        if(t){ t.status = (t.status === 'Upcoming') ? 'Paid' : 'Upcoming'; savePayments(currentConvoId, all); }
+        renderPayments();
+      });
+      item.querySelector('[data-action="delete"]').addEventListener('click', ()=>{
+        savePayments(currentConvoId, loadPayments(currentConvoId).filter(x=>x.id!==p.id));
+        renderPayments();
+      });
+      item.querySelector('[data-action="edit"]').addEventListener('click', ()=>{
+        document.getElementById('pfDate').value = p.iso || '';
+        document.getElementById('pfAmount').value = p.amount;
+        document.getElementById('pfNote').value = p.note || '';
+        pfStatus = status;
+        savePayments(currentConvoId, loadPayments(currentConvoId).filter(x=>x.id!==p.id));
+        renderPayments();
+      });
+      paymentList.appendChild(item);
+    });
+  }
+
+  const pgBox = document.getElementById('pgBox');
+  document.getElementById('qaPayments').addEventListener('click', ()=>{
+    const s = loadSummary(currentConvoId);
+    // prefill the generator from the agreement
+    document.getElementById('pgDate').value = s.moveInISO || '';
+    document.getElementById('pgMonths').value = s.leaseMonths || '';
+    document.getElementById('pgAmount').value = s.rent || '';
+    pgBox.classList.remove('open');
+    renderPayments();
+    paymentOverlay.classList.add('open');
+  });
+  document.getElementById('paymentClose').addEventListener('click', ()=> paymentOverlay.classList.remove('open'));
+  paymentOverlay.addEventListener('click', e=>{ if(e.target===paymentOverlay) paymentOverlay.classList.remove('open'); });
+
+  document.getElementById('pgToggle').addEventListener('click', ()=> pgBox.classList.toggle('open'));
+  document.getElementById('pgClear').addEventListener('click', ()=>{
+    if(!confirm('Delete all payments in this list?')) return;
+    savePayments(currentConvoId, []);
+    renderPayments();
+  });
+  document.getElementById('pgGenerate').addEventListener('click', ()=>{
+    const first = document.getElementById('pgDate').value;
+    const n = Math.min(36, Math.floor(Number(document.getElementById('pgMonths').value)));
+    const amount = document.getElementById('pgAmount').value.trim();
+    if(!first || !(n > 0) || !amount) return;
+    const today = isoOf(new Date());
+    const list = loadPayments(currentConvoId);
+    for(let i = 0; i < n; i++){
+      const iso = addMonths(first, i);
+      list.push({
+        id: Date.now() + i, iso, date: fmtDate(iso), amount,
+        note: i === 0 ? "First month's rent" : 'Rent — month ' + (i + 1),
+        status: iso <= today ? 'Paid' : 'Upcoming'
+      });
+    }
+    savePayments(currentConvoId, list);
+    pgBox.classList.remove('open');
+    renderPayments();
+  });
+
+  document.getElementById('pfAddBtn').addEventListener('click', ()=>{
+    const iso = document.getElementById('pfDate').value;
+    const amount = document.getElementById('pfAmount').value.trim();
+    const note = document.getElementById('pfNote').value.trim();
+    if(!iso || !amount) return;
+    const list = loadPayments(currentConvoId);
+    list.push({ id: Date.now(), iso, date: fmtDate(iso), amount, note, status: pfStatus });
+    savePayments(currentConvoId, list);
+    pfStatus = 'Paid';
+    document.getElementById('pfDate').value = '';
+    document.getElementById('pfAmount').value = '';
+    document.getElementById('pfNote').value = '';
+    renderPayments();
+  });
+
+  // ==================== EDITABLE PROFILE (replaces "Sign In") ====================
+  const PROFILE_KEY = 'bnb_profile';
+  const profileBtn = document.getElementById('profileBtn');
+  const profileAvatar = document.getElementById('profileAvatar');
+  const profileLabel = document.getElementById('profileLabel');
+  const profileOverlay = document.getElementById('profileOverlay');
+  const profilePreview = document.getElementById('profilePreview');
+  const profileFile = document.getElementById('profileFile');
+  const profileName = document.getElementById('profileName');
+  let profileDraft = { name:'', photo:'' };
+
+  function loadProfile(){
+    try{
+      const raw = localStorage.getItem(PROFILE_KEY);
+      if(raw) return JSON.parse(raw);
+    }catch(e){ console.warn('Could not read profile.', e); }
+    return { name:'', photo:'' };
+  }
+  function saveProfile(p){
+    try{ localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); }
+    catch(e){ console.warn('Could not save profile.', e); }
+  }
+  function paintAvatar(el, p, emptyChar){
+    if(p.photo){
+      el.style.backgroundImage = `url('${p.photo}')`;
+      el.textContent = '';
+    } else {
+      el.style.backgroundImage = '';
+      el.textContent = p.name ? p.name.trim().charAt(0).toUpperCase() : emptyChar;
+    }
+  }
+  function renderProfile(){
+    const p = loadProfile();
+    if(p.name || p.photo){
+      profileAvatar.hidden = false;
+      paintAvatar(profileAvatar, p, '');
+      profileLabel.textContent = p.name;
+      profileLabel.style.display = p.name ? '' : 'none';
+    } else {
+      profileAvatar.hidden = true;
+      profileLabel.textContent = 'Sign In';
+      profileLabel.style.display = '';
+    }
+  }
+  function openProfile(){
+    profileDraft = { ...loadProfile() };
+    profileName.value = profileDraft.name || '';
+    paintAvatar(profilePreview, profileDraft, '+');
+    profileOverlay.classList.add('open');
+  }
+  function closeProfile(){ profileOverlay.classList.remove('open'); }
+
+  profileBtn.addEventListener('click', openProfile);
+  document.getElementById('profileClose').addEventListener('click', closeProfile);
+  profileOverlay.addEventListener('click', e=>{ if(e.target===profileOverlay) closeProfile(); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeProfile(); });
+
+  document.getElementById('profileUpload').addEventListener('click', ()=> profileFile.click());
+  profilePreview.addEventListener('click', ()=> profileFile.click());
+  document.getElementById('profileRemovePhoto').addEventListener('click', ()=>{
+    profileDraft.photo = '';
+    profileDraft.name = profileName.value.trim();
+    paintAvatar(profilePreview, profileDraft, '+');
+  });
+
+  // resize + center-crop the chosen photo to 160x160 so it fits in localStorage
+  profileFile.addEventListener('change', ()=>{
+    const file = profileFile.files && profileFile.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const size = 160;
+        const canvas = document.createElement('canvas');
+        canvas.width = size; canvas.height = size;
+        const side = Math.min(img.width, img.height);
+        const sx = (img.width - side) / 2, sy = (img.height - side) / 2;
+        canvas.getContext('2d').drawImage(img, sx, sy, side, side, 0, 0, size, size);
+        profileDraft.photo = canvas.toDataURL('image/jpeg', 0.85);
+        profileDraft.name = profileName.value.trim();
+        paintAvatar(profilePreview, profileDraft, '+');
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+    profileFile.value = '';
+  });
+
+  document.getElementById('profileSave').addEventListener('click', ()=>{
+    saveProfile({ name: profileName.value.trim(), photo: profileDraft.photo || '' });
+    renderProfile();
+    closeProfile();
+  });
+  profileName.addEventListener('keydown', e=>{
+    if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('profileSave').click(); }
+  });
+  document.getElementById('profileSignOut').addEventListener('click', ()=>{
+    try{ localStorage.removeItem(PROFILE_KEY); }catch(e){}
+    renderProfile();
+    closeProfile();
+  });
+
+  // ---- init ----
+  renderProfile();
+  updateSidebarPreview('nora');
+  updateSidebarPreview('khal');
+  renderChat();
+  renderSummary();
+</script>
+
+</body>
+</html>
